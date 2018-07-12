@@ -17,20 +17,34 @@ If you are not using Visual Studio you just need to be sure that you have a C++1
 
 # Usage
 
-The `Equation` class is a generic equation solver that takes the expression (as string) in input. Please note that an expression must be properly written otherwise an exception will be raised (for example `2*x` is good but `2x` not). Let's see an example:
+The `Equation` class is a generic equation solver that takes the expression (as string) in input. Please note that an expression must be properly written otherwise an exception will be raised (for example `2*x` is good but `2x` not). Let's see an example where we try to solve `f(x) = e^x-2x^2`:
 
 ``` c++
 int main() {
 
   using namespace NA_Equation;
 
-  //f(x) = e^x - 2x^2
-  Equation test{"exp(x)-2*x^2"};
-  auto solution = test.solveEquation(Algorithm::Newton, {1.3, 1.0e-10, 20}, true);
+  try {
+	
+    //f(x) = e^x - 2x^2
+    Equation test{ std::move("exp(x)-2*x^2") };
+    auto eqSolution = test.solveEquation(Algorithm::Newton, { 1.3, 1.0e-10, 20 }, true);
 
-  std::cout << "Solution [x0] = " << std::get<0>(solution) << std::endl;
-  std::cout << "Residual [f(x0)] = " << std::get<1>(solution) << std::endl;
+    std::cout << "Solution [x0] = " << std::get<0>(eqSolution) << std::endl;
+    std::cout << "Residual [f(x0)] = " << std::get<1>(eqSolution) << std::endl;
 
- return 0;
+  } catch (const std::exception& err) {
+    std::cerr << "Ops: " << err.what() << std::endl;
+  }
+
+  return 0;
 }
 ```
+
+The usage is very easy: create an Equation object and use `solveEquation()` to get the solutions. The `eqSolution` is a tuple so you need to call `std::get`. Let's see in particular the signature of solve Equation:
+
+``` c++
+Result solveEquation(Algorithm algorithm, const std::vector<double>& inputList, bool guessList = false);
+```
+
+ - Resul
