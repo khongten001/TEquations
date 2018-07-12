@@ -13,6 +13,6 @@ Visual Studio may not compile correctly because there isn't the `stdafx.h` heade
  - Add `#include "stdafx.h"` where needed
  - Go on Project > Properties > Configuration properties > C/C++ > Precompiled Headers and set the **Not Using Precompiled Headers** option
  
-If you are not using Visual Studio you just need to be sure that you have a C++11 (C++14 or higher would be better) compiler and copy paste the files in the same folder as your main.
+If you are not using Visual Studio you just need to be sure that you have a C++11 (C++14 or higher would be better) compiler and copy paste the files in the same folder as your main. Import the all the files and then type `#include "Equation.h"`.
 
 # Usage
