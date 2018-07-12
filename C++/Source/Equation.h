@@ -8,7 +8,7 @@
 #include <complex>
 #include <functional>
 #include <initializer_list>
-#include "..\Parser\fparser.hh"
+#include "Parser/fparser.hh"
 
 namespace NA_Equation {
 
