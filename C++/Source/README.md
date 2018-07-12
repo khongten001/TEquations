@@ -22,14 +22,14 @@ The `Equation` class is a generic equation solver that takes the expression (as 
 ``` c++
 int main() {
 
-	using namespace NA_Equation;
+  using namespace NA_Equation;
 
-	//f(x) = e^x - 2x^2
-	Equation test{"exp(x)-2*x^2"};
-	auto solution = test.solveEquation(Algorithm::Newton, {1.3, 1.0e-10, 20}, true);
+  //f(x) = e^x - 2x^2
+  Equation test{"exp(x)-2*x^2"};
+  auto solution = test.solveEquation(Algorithm::Newton, {1.3, 1.0e-10, 20}, true);
 
-	std::cout << "Solution [x0] = " << std::get<0>(solution) << std::endl;
-	std::cout << "Residual [f(x0)] = " << std::get<1>(solution) << std::endl;
+  std::cout << "Solution [x0] = " << std::get<0>(solution) << std::endl;
+  std::cout << "Residual [f(x0)] = " << std::get<1>(solution) << std::endl;
 
  return 0;
 }
