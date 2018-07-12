@@ -16,3 +16,21 @@ Visual Studio may not compile correctly because there isn't the `stdafx.h` heade
 If you are not using Visual Studio you just need to be sure that you have a C++11 (C++14 or higher would be better) compiler and copy paste the files in the same folder as your main. Import the all the files and then type `#include "Equation.h"`.
 
 # Usage
+
+The `Equation` class is a generic equation solver that takes the expression (as string) in input. Please note that an expression must be properly written otherwise an exception will be raised (for example `2*x` is good but `2x` not). Let's see an example:
+
+``` c++
+int main() {
+
+	using namespace NA_Equation;
+
+	//f(x) = e^x - 2x^2
+	Equation test{"exp(x)-2*x^2"};
+	auto solution = test.solveEquation(Algorithm::Newton, {1.3, 1.0e-10, 20}, true);
+
+	std::cout << "Solution [x0] = " << std::get<0>(solution) << std::endl;
+	std::cout << "Residual [f(x0)] = " << std::get<1>(solution) << std::endl;
+
+ return 0;
+}
+```
