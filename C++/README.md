@@ -1,5 +1,5 @@
-# Installation
-This library has been written using VS 2017 and the sources can be used with every compiler that supports C++14 (or higher).
+# Notes
 
-# Usage
-Info about the usage can be found inside the Source folder.
+ - This library has been written using VS 2017 **without** the inclusion of the stdafx header.
+ - The sources can be used with every compiler that supports C++11 (or higher).
+ - Installation, documentation and examples can be found in the Source folder
