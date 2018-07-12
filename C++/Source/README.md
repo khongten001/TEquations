@@ -1,7 +1,5 @@
 # Installation
 
-```c++
-```
 You just need to import the content of this folder and include `Equation.h` as header in your program. Here's a step-by-step guide that's good for Visual Studio:
 
  1. Create a new empty project (for example a Windows Console Application).
