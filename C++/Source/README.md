@@ -44,7 +44,16 @@ int main() {
 The usage is very easy: create an Equation object and use `solveEquation()` to get the solutions. The `eqSolution` is a tuple so you need to call `std::get`. Let's see in particular the signature of solve Equation:
 
 ``` c++
+using Result = std::tuple<double, double, std::vector<double>>;
+enum class Algorithm { Newton = 0, NewtonWithMultiplicity = 1, Secant = 2 };
+
 Result solveEquation(Algorithm algorithm, const std::vector<double>& inputList, bool guessList = false);
 ```
 
- - Resul
+ - `Result`. This tuple holds 3 items: the solution x0, the residual (the function evaluated on xo) and a vector that contains the list of the residuals evaluated by the algorithm while running.
+ 
+ - `Algorithm`. This enum is needed because the user has to select which root finding methods has to be used. In the example above I've used the popular Newton algorithm (`Algorithm::Newton`) to solve the equation.
+ 
+ - `inputList`. It's an array that contains some points that are related to the chosen algorithm to run.
+ 
+ - `guessList`. Set it to true of false if you want/don't want the residuals list inside the Result vector.
