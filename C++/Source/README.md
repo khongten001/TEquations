@@ -26,40 +26,40 @@ If you are not using Visual Studio you just need to be sure that you have a C++1
 The `Equation` class is a generic equation solver that takes the expression (as string) in input. Please note that an expression must be properly written otherwise an exception will be raised (for example `2*x` is good but `2x` not). Let's see an example where we try to solve `f(x) = e^x-2x^2`:
 
 ``` c++
-int main() {
+using namespace NA_Equation;
+std::cout.precision(15);
 
-  using namespace NA_Equation;
+try {
 
-  try {
-	
-    //f(x) = e^x - 2x^2
-    Equation test{ std::move("exp(x)-2*x^2") };
-    auto eqSolution = test.solveEquation(Algorithm::Newton, { 1.3, 1.0e-10, 20 }, true);
+  Equation test{ std::move("exp(x)-2*x^2") };
+  auto solution = test.solveEquation(Algorithm::Newton, { 1.3, 1.0e-10, 20 }, true);
 
-    std::cout << "Solution [x0] = " << std::get<0>(eqSolution) << std::endl;
-    std::cout << "Residual [f(x0)] = " << std::get<1>(eqSolution) << std::endl;
+  std::cout << "Solution [x0] = " << std::get<0>(solution) << std::endl;
+  std::cout << "Residual [f(x0)] = " << std::get<1>(solution) << std::endl;
 
-  } catch (const std::exception& err) {
-    std::cerr << "Ops: " << err.what() << std::endl;
+  std::cout << "\nResiduals list:" << std::endl;
+  std::vector<double> x = std::move(std::get<2>(solution));
+  
+  for (const auto& val : x) {
+    std::cout << val << std::endl;
   }
-
-  return 0;
+	
+} catch (const std::exception& err) {
+  std::cerr << "Ops: " << err.what() << std::endl;
 }
+
+/* 
+====== OUTPUT ======
+
+Solution [x0] = 1.48796206549818
+Residual [f(x0)] = 8.88178419700125e-16
+
+Residuals list:
+1.3
+1.4889957706899
+1.48796191447505
+1.48796206549823
+1.48796206549818
+*/
 ```
-
-The usage is very easy: create an Equation object and use `solveEquation()` to get the solutions. The `eqSolution` is a tuple so you need to call `std::get`. Let's see in particular the signature of solve Equation:
-
-``` c++
-using Result = std::tuple<double, double, std::vector<double>>;
-enum class Algorithm { Newton = 0, NewtonWithMultiplicity = 1, Secant = 2 };
-
-Result solveEquation(Algorithm algorithm, const std::vector<double>& inputList, bool guessList = false);
-```
-
- - `Result`. This tuple holds 3 items: the solution x0, the residual (the function evaluated on xo) and a vector that contains the list of the residuals evaluated by the algorithm while running.
- 
- - `Algorithm`. This enum is needed because the user has to select which root finding methods has to be used. In the example above I've used the popular Newton algorithm (`Algorithm::Newton`) to solve the equation.
- 
- - `inputList`. It's an array that contains some points that are related to the chosen algorithm to run.
- 
- - `guessList`. Set it to true of false if you want/don't want the residuals list inside the Result vector.
+a
