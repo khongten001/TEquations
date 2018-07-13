@@ -2,24 +2,24 @@
 
 **Short Version**
 
-You just need to import the content of this folder and include `Equation.h` as header in your program. Visual Studio may not compile correctly because there isn't the `stdafx.h` header in my library. You have 2 ways to solve this:
-
- - Add `#include "stdafx.h"` where needed
- - Go on Project > Properties > Configuration properties > C/C++ > Precompiled Headers and set the **Not Using Precompiled Headers** option
- 
-If you are not using Visual Studio you just need to be sure that you have a C++11 (C++14 or higher would be better) compiler and copy paste the files in the same folder as your main. Import the all the files and then type `#include "Equation.h"`.
+You just need to import the content of this folder and type `#include Equation.h` in your program. That's all!
 
 **Long version**
 
-Here's a step by step installation guide that's good for Visual Studio
+Visual Studio may not compile the files correctly because there isn't the `stdafx.h` header in my library. You have 2 ways to solve this:
+
+ - Add `#include "stdafx.h"` where needed
+ - Go on Project > Properties > Configuration properties > C/C++ > Precompiled Headers and set the **Not Using Precompiled Headers** option
+
+Here's a step by step installation guide that's good for Visual Studio:
 
  1. Create a new empty project (for example a Windows Console Application).
  2. Save everything, just in case.
- 3. Copy the contents (the h/cpp files and the Parser folder) in the project folder. In this way you have in the same folder the cpp file with the `main()` and the h/cpp files of the Equation library.
+ 3. Copy the contents (the h/cpp files and the Parser folder) in the project folder. In this way you have (in the same folder) the cpp file with the `main()` and the h/cpp files of the Equation library.
  4. Go on Project > Add Existing Items > Navigate to the project folder > Select everything (the Parser folder and the h/cpp files called Equation and Fraction) > Click Add
- 5. Now you can type `#include "Equation.h"` and jump to the next section!
+ 5. Now you can type `#include "Equation.h"` and jump to the Usage section!
 
-Note that, as I've already written above, if you are using VS you may have to disable the precompiled header option **or** add the `stdafx.h` header where needed.
+If you are not using Visual Studio you just need to be sure that you have a C++11 (C++14 or higher would be better) compiler and, once you've imported the content of the Source folder in your project, the only requirement is `#include "Equation.h"`.
 
 # Usage
 
