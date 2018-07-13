@@ -62,4 +62,19 @@ Residuals list:
 1.48796206549818
 */
 ```
-a
+
+Please note that if you have a C++17 compiler you can achieve the same result with less lines of code (I prefer this way).
+
+```c++
+Equation test{ std::move("exp(x)-2.1*x^2") };
+//Structured bindings (auto + bracket initializer) were introduced in C++17
+const auto& [x0, residual, list] = test.solveEquation(Algorithm::Newton, { 1.3, 1.0e-10, 20 }, true);
+
+std::cout << "Solution [x0] = " << x0 << std::endl;
+std::cout << "Residual [f(x0)] = " << residual << std::endl;
+
+std::cout << "\nResiduals list:" << std::endl;
+for (const auto& val : list) {
+  std::cout << val << std::endl;
+}
+```		
