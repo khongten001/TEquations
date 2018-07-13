@@ -108,4 +108,32 @@ This library implements some root finding algorithms (and maybe more in the futu
 
 # Specific usage
 
-A
+The `Equation` class is general purpose and it uses root finding algorithms (they may not converge to a solution) that produce an approximation of the solution. If you have to deal with polynomials you can use `Equation` but it would be better if you used one of the following classes:
+
+ - `Quadratic`: second degree polynomials solver
+ - `Cubic`: third degree polynomials solver
+ - `Quartic`: fourth degree polynomials solver
+ - `PolyEquation`: generic polynomials solver
+ 
+ Let's see an example
+ 
+ ```c++
+ //f(x) = 2x^3 + x^2 - 3x + 5
+ Cubic test{ 5, -3, 1, 2 };
+ auto solutions = test.getSolutions();
+
+ for (const auto& x : solutions) {
+   std::cout << x << std::endl;
+   // or call x.real() and x.imag() to get the real/complex part
+ }
+ 
+ /*
+   ====== OUTPUT ======
+   
+   (-1.93877822138267,0)
+   (0.719389110691337,0.878607528100661)
+   (0.719389110691337,0.878607528100661)
+ */
+ ```
+ 
+The `solutions` variable is a vector of `std::complex` so the result is in the format `(realPart, imagPart)`; the usage of the other classes is identical. Please note that the parameters in input start from the coefficient with the **lower** degree so `2x^3 + x^2 - 3x + 5` is `test{ 5, -3, 1, 2 }` (the reverse order).
