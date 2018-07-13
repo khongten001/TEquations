@@ -34,9 +34,11 @@ try {
   Equation test{ std::move("exp(x)-2*x^2") };
   auto solution = test.solveEquation(Algorithm::Newton, { 1.3, 1.0e-10, 20 }, true);
   
+  // Algorithm::Newton = the root finding algorithm
   // 1.3 = the initial guess
   // 1.0e-10 = the tolerance
   // 20 = the max. number of iterations
+  // true = guesses list (generate a vector containing the various x0 calculated during the execution of the algorithm)
 
   std::cout << "Solution [x0] = " << std::get<0>(solution) << std::endl;
   std::cout << "Residual [f(x0)] = " << std::get<1>(solution) << std::endl;
@@ -83,4 +85,20 @@ for (const auto& val : list) {
 }
 ```	
 
-There's another thing that you should know. 
+This library implements some root finding algorithms (and maybe more in the future) and each of them need some input numbers to run. Considering again the example `f(x) = e^x-2x^2` let's see which algorithms we can use:
+
+ - Newton's method.
+   ```c++
+   test.solveEquation(Algorithm::Newton, { 1.3, 1.0e-10, 20 }, true);
+   ```
+     - First parameter: the algorithm type `Newton`
+     - Second parameter: an array containing: the initial guess, the tolerance and the max. number of iterations
+     - Third parameter: true or false if you want to generate a table with the x0 calculated during the calculation process
+     
+  - Newton's method with multiplicity.
+    ```c++
+    test.solveEquation(Algorithm::NewtonWithMultiplicity, { 1.3, 1.0e-10, 20. 1 }, true);
+    ```
+     - First parameter: the algorithm type `NewtonWithMultiplicity`
+     - Second parameter: an array containing: the initial guess, the tolerance, the max. number of iterations and the multiplicity
+     - Third parameter: see above
