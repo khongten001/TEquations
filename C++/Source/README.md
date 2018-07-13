@@ -92,7 +92,7 @@ This library implements some root finding algorithms (and maybe more in the futu
      
   - Newton's method with multiplicity.
     ```c++
-    test.solveEquation(Algorithm::NewtonWithMultiplicity, { 1.3, 1.0e-10, 20. 1 }, true);
+    test.solveEquation(Algorithm::NewtonWithMultiplicity, { 1.3, 1.0e-10, 20, 1 }, true);
     ```
      - First parameter: the algorithm type `NewtonWithMultiplicity`
      - Second parameter: an array containing: the initial guess, the tolerance, the max. number of iterations and the multiplicity
@@ -115,7 +115,7 @@ The `Equation` class is general purpose and it uses root finding algorithms (the
  - `Quartic`: fourth degree polynomials solver
  - `PolyEquation`: generic polynomials solver
  
- Let's see an example
+ Let's see an example with a cubic equation (3rd degree polynomial): 
  
  ```c++
  //f(x) = 2x^3 + x^2 - 3x + 5
@@ -136,4 +136,9 @@ The `Equation` class is general purpose and it uses root finding algorithms (the
  */
  ```
  
-The `solutions` variable is a vector of `std::complex` so the result is in the format `(realPart, imagPart)`; the usage of the other classes is identical. Please note that the parameters in input start from the coefficient with the **lower** degree so `2x^3 + x^2 - 3x + 5` is `test{ 5, -3, 1, 2 }` (the reverse order).
+The `solutions` variable is a vector of `std::complex` so the result is in the format `(realPart, imagPart)`; the usage of the other classes is identical. Please note that the parameters in input start from the coefficient with the **lower** degree so `2x^3 + x^2 - 3x + 5` is `test{ 5, -3, 1, 2 }` (the reverse order). Another way:
+
+```c++
+Equation test{ std::move("2x^3+x^2-3x+5") };
+const auto& [x0, residual, list] = test.solveEquation(Algorithm::Secant, { -2, -1.5, 1.0e-10, 20 }, true);
+```
