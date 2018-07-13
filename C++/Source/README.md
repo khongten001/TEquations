@@ -33,6 +33,10 @@ try {
 
   Equation test{ std::move("exp(x)-2*x^2") };
   auto solution = test.solveEquation(Algorithm::Newton, { 1.3, 1.0e-10, 20 }, true);
+  
+  // 1.3 = the initial guess
+  // 1.0e-10 = the tolerance
+  // 20 = the max. number of iterations
 
   std::cout << "Solution [x0] = " << std::get<0>(solution) << std::endl;
   std::cout << "Residual [f(x0)] = " << std::get<1>(solution) << std::endl;
@@ -77,4 +81,6 @@ std::cout << "\nResiduals list:" << std::endl;
 for (const auto& val : list) {
   std::cout << val << std::endl;
 }
-```		
+```	
+
+There's another thing that you should know. 
