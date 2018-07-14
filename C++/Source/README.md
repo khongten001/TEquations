@@ -139,7 +139,7 @@ The `Equation` class is general purpose and it uses root finding algorithms (the
 The `solutions` variable is a vector of `std::complex` so the result is in the format `(realPart, imagPart)`; the usage of the other classes is identical. Please note that the parameters in input start from the coefficient with the **lower** degree so `2x^3 + x^2 - 3x + 5` is `test{ 5, -3, 1, 2 }` (the reverse order). Another way:
 
 ```c++
-Equation test{ std::move("2x^3+x^2-3x+5") };
+Equation test{ std::move("2*x^3+x^2-3*x+5") };
 const auto& [x0, residual, list] = test.solveEquation(Algorithm::Secant, { -2, -1.5, 1.0e-10, 20 }, true);
 ```
 
