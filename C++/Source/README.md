@@ -157,6 +157,72 @@ auto sol = test.getSolutions();
 
 for (const auto& x : sol) {
   std::cout << x << std::endl;
-}```
+}
+```
 
 The algorithms supported in this class are Laguerre and Bairstrow but you can create new ones just adding members to the algorithm container inside the class (which is a `std::map`).
+
+# Notes
+
+I have added a `Fraction` class that may be useful if you have to deal with fractions as input/output. Please note that the algorithms will output an **approximated fractional representation**, which means this:
+
+```c++
+Fraction s{ std::sqrt(3) };
+std::cout << s.toString();
+
+// OUTPUT: 1351/780
+```
+
+The square root of 3 is an irrational number and it cannot be represented as fraction but here we get that `sqrt(3) = 191861/110771`!  The reason is that the algorithm computes the square root of 3, it takes the first 10 decimal digits (1.*7320508075*) and then it calculates the fractional value of 1.7320508075.
+
+I'll repeat it: keep in mind that this class gives an approximated fractional representation. Anyway this class can be useful in some cases:
+
+```c++
+using namespace NA_F;
+td::cout.precision(15);
+
+try {
+
+  Fraction s{ 5.675 };
+  //OUTPUT: 227/40
+  std::cout << s.toString() << std::endl;   
+
+  Fraction t{ "24/62" };
+  //OUTPUT: 24/62
+  std::cout << t.toString() << std::endl;
+  t.Reduce();
+  //OUTPUT: 12/31
+  std::cout << t.toString() << std::endl;
+  //OUTPUT: 0.38709677419...
+  std::cout << t.toDouble() << std::endl;
+	
+} catch (const std::exception& err) {
+std::cerr << "Ops: " << err.what() << std::endl;
+}
+```
+
+You can also execute common operations between fraction objects such as:
+
+```c++
+using namespace NA_F;
+td::cout.precision(15);
+
+try {
+
+  Fraction s{ 5.675 };
+  s.Inverse();
+
+  Fraction t{ "1/3" };
+  s.Negate();
+  
+  Fraction u = s + t;
+  u.Reduce();
+  ++u;
+  
+  //OUTPUT: 788/681
+  std::cout << u.toString() << std::endl;
+	
+} catch (const std::exception& err) {
+std::cerr << "Ops: " << err.what() << std::endl;
+}
+```
