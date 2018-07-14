@@ -170,10 +170,10 @@ I have added a `Fraction` class that may be useful if you have to deal with frac
 Fraction s{ std::sqrt(3) };
 std::cout << s.toString();
 
-// OUTPUT: 1351/780
+// OUTPUT: 191861/110771
 ```
 
-The square root of 3 is an irrational number and it cannot be represented as fraction but here we get that `sqrt(3) = 191861/110771`!  The reason is that the algorithm computes the square root of 3, it takes the first 10 decimal digits (1.*7320508075*) and then it calculates the fractional value of 1.7320508075.
+The square root of 3 is an irrational number and it cannot be represented as fraction but here we get that `sqrt(3) = 191861/110771`!  The reason is that the algorithm computes the square root of 3, it takes the first 10 decimal digits (1.*73205080757*) and then it calculates the fractional value of 1.73205080757.
 
 I'll repeat it: keep in mind that this class gives an approximated fractional representation. Anyway this class can be useful in some cases:
 
