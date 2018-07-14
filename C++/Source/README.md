@@ -197,7 +197,7 @@ try {
   std::cout << t.toDouble() << std::endl;
 	
 } catch (const std::exception& err) {
-std::cerr << "Ops: " << err.what() << std::endl;
+  std::cerr << "Ops: " << err.what() << std::endl;
 }
 ```
 
@@ -223,6 +223,6 @@ try {
   std::cout << u.toString() << std::endl;
 	
 } catch (const std::exception& err) {
-std::cerr << "Ops: " << err.what() << std::endl;
+  std::cerr << "Ops: " << err.what() << std::endl;
 }
 ```
