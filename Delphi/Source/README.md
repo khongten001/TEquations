@@ -19,6 +19,7 @@ Here's a step by step installation guide. I am creating a new VCL project just a
 The `Equation` class is a generic equation solver that takes the expression (as string) in input. Please note that an expression must be properly written otherwise an exception will be raised (for example `2*x` is good but `2x` not). Let's see an example where we try to solve `f(x) = e^x-2x^2`:
 
 ``` delphi
+procedure Test;
 var
   AEquation: IEquation;
   AResult: TResult;
@@ -44,7 +45,7 @@ begin
   
 end;
 
-/* 
+(* 
 ====== OUTPUT ======
 
 Solution [x0] = 1,48796206549818
@@ -55,7 +56,7 @@ Residuals list:
 1,4889957706899
 1,48796191447505
 1,48796206549823
-*/
+*)
 ```
 
 Please note that here I've used the interface `AEquation: IEquation` to gain the reference counting mechanism and the automatic memory managment of the object. It's also possible to declare `AEquation: TEquation` but now of course you have to use the classic `try ... finally` block! 
@@ -100,37 +101,38 @@ The `Equation` class is general purpose and it uses root finding algorithms (the
  
  Let's see an example with a cubic equation (3rd degree polynomial): 
  
- ```c++
+ ```delphi
+procedure Test;
 var
   AEquation: TPolyBase;
   AResult: TPolyResult;
   i: integer;
 begin
 
-AEquation := TCubic.Create(5, -3, 1, 2);
-try
-  AResult := AEquation.GetSolutions(); 
+  AEquation := TCubic.Create(5, -3, 1, 2);
+  try
+    AResult := AEquation.GetSolutions(); 
   
-  for i := Low(AResult) to High(AResult) do
-    Writeln(AResult[i].ToString);
-finally
-  AEquation.Free;
-end;
+    for i := Low(AResult) to High(AResult) do
+      Writeln(AResult[i].ToString);
+  finally
+    AEquation.Free;
+  end;
 
 end;
  
- /*
-   ====== OUTPUT ======
+(*
+====== OUTPUT ======
    
-   -1,93877822138267 + 0i
-   0,719389110691337 + 0,878607528100661i
-   0,719389110691337 - 0,878607528100661i
- */
+-1,93877822138267 + 0i
+0,719389110691337 + 0,878607528100661i
+0,719389110691337 - 0,878607528100661i
+*)
  ```
  
 The `TPolyResult` variable is a vector of `Complex` so the result is in the format `realPart + imagPart`; the usage of the other classes is identical. Please note that the parameters in input start from the coefficient with the **lower** degree so `2x^3 + x^2 - 3x + 5` is `TCubic.Create(5, -3, 1, 2)` (the reverse order). Another way:
 
-```c++
+```delphi
 AEquation := TEquation.Create('2*x^3+x^2-3*x+5');
 AResult := AEquation.SolveEquation(TAlgorithm.Secant, [-2, -1.5, 1.0e-10, 20], true);
 ```
