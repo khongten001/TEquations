@@ -18,82 +18,72 @@ Here's a step by step installation guide. I am creating a new VCL project just a
 
 The `Equation` class is a generic equation solver that takes the expression (as string) in input. Please note that an expression must be properly written otherwise an exception will be raised (for example `2*x` is good but `2x` not). Let's see an example where we try to solve `f(x) = e^x-2x^2`:
 
-``` c++
-using namespace NA_Equation;
-std::cout.precision(15);
+``` delphi
+var
+  AEquation: IEquation;
+  AResult: TResult;
+  i: integer;
+begin
 
-try {
+  AEquation := TEquation.Create('exp(x)-2*x^2');
+  try
+    AResult := AEquation.SolveEquation(TAlgorithm.Newton, [1.3, 1.0e-10, 20], true);
+    //read below to understand the meaning of the input parameters of solveEquation()
 
-  Equation test{ std::move("exp(x)-2*x^2") };
-  auto solution = test.solveEquation(Algorithm::Newton, { 1.3, 1.0e-10, 20 }, true);
-  //read below to understand the meaning of the input parameters of solveEquation()
+    Writeln('Solution [x0] = ' + AResult.Solution.ToString);
+    Writeln('Residual [f(x0)] = ' + AResult.Residual.ToString);
 
-  std::cout << "Solution [x0] = " << std::get<0>(solution) << std::endl;
-  std::cout << "Residual [f(x0)] = " << std::get<1>(solution) << std::endl;
+    Writeln(sLineBreak + 'Residuals list:');
+    for i := Low(AResult.GuessesList) to High(AResult.GuessesList) do
+      Writeln(AResult.GuessesList[i].ToString);
 
-  std::cout << "\nResiduals list:" << std::endl;
-  std::vector<double> x = std::move(std::get<2>(solution));
+  except
+    on E : Exception do
+     Writeln(E.Message);
+  end;
   
-  for (const auto& val : x) {
-    std::cout << val << std::endl;
-  }
-	
-} catch (const std::exception& err) {
-  std::cerr << "Ops: " << err.what() << std::endl;
-}
+end;
 
 /* 
 ====== OUTPUT ======
 
-Solution [x0] = 1.48796206549818
-Residual [f(x0)] = 8.88178419700125e-16
+Solution [x0] = 1,48796206549818
+Residual [f(x0)] = -8,17124146124115E-14
 
 Residuals list:
-1.3
-1.4889957706899
-1.48796191447505
-1.48796206549823
-1.48796206549818
+1,3
+1,4889957706899
+1,48796191447505
+1,48796206549823
 */
 ```
 
-Please note that if you have a C++17 compiler you can achieve the same result with less lines of code (I prefer this way).
+Please note that here I've used the interface `AEquation: IEquation` to gain the reference counting mechanism and the automatic memory managment of the object. It's also possible to declare `AEquation: TEquation` but now of course you have to use the classic `try ... finally` block! 
 
-```c++
-Equation test{ std::move("exp(x)-2.1*x^2") };
-//Structured bindings (auto + bracket initializer) were introduced in C++17
-const auto& [x0, residual, list] = test.solveEquation(Algorithm::Newton, { 1.3, 1.0e-10, 20 }, true);
-
-std::cout << "Solution [x0] = " << x0 << std::endl;
-std::cout << "Residual [f(x0)] = " << residual << std::endl;
-
-std::cout << "\nResiduals list:" << std::endl;
-for (const auto& val : list) {
-  std::cout << val << std::endl;
-}
-```	
+  - The interface type `IEquation` offers the methods `SolveEquation` and `EvaluateOn`
+  - The non interface type `TEquation` offers the methods `SolveEquation`, `EvaluateOn` and `EvalDerivative`
 
 This library implements some root finding algorithms (and maybe more in the future) and each of them need some input numbers to run. Considering again the example `f(x) = e^x-2x^2` let's see which algorithms we can use:
 
  - Newton's method.
-   ```c++
-   test.solveEquation(Algorithm::Newton, { 1.3, 1.0e-10, 20 }, true);
+   ```delphi
+   AEquation.SolveEquation(TAlgorithm.Newton, [1.3, 1.0e-10, 20], true)
    ```
      - First parameter: the algorithm type `Newton`
      - Second parameter: an array containing: the initial guess, the tolerance and the max. number of iterations
      - Third parameter: true or false if you want to generate a table with the x0 calculated during the calculation process
      
   - Newton's method with multiplicity.
-    ```c++
-    test.solveEquation(Algorithm::NewtonWithMultiplicity, { 1.3, 1.0e-10, 20, 1 }, true);
+    ```delphi
+    AEquation.SolveEquation(TAlgorithm.NewtonWithMultiplicity, [1.3, 1.0e-10, 20, 1], true)
     ```
      - First parameter: the algorithm type `NewtonWithMultiplicity`
      - Second parameter: an array containing: the initial guess, the tolerance, the max. number of iterations and the multiplicity
      - Third parameter: see above
      
   - Newton's method with multiplicity.
-    ```c++
-    test.solveEquation(Algorithm::Secant, { 1, 2, 1.0e-10, 20 }, true);
+    ```delphi
+    AResult := AEquation.SolveEquation(TAlgorithm.Secant, [1, 2, 1.0e-10, 20], true);
     ```
      - First parameter: the algorithm type `Secant`
      - Second parameter: an array containing: the lower bound, the upper bound, the tolerance and the max. number of iterations
@@ -111,29 +101,38 @@ The `Equation` class is general purpose and it uses root finding algorithms (the
  Let's see an example with a cubic equation (3rd degree polynomial): 
  
  ```c++
- //f(x) = 2x^3 + x^2 - 3x + 5
- Cubic test{ 5, -3, 1, 2 };
- auto solutions = test.getSolutions();
+var
+  AEquation: TPolyBase;
+  AResult: TPolyResult;
+  i: integer;
+begin
 
- for (const auto& x : solutions) {
-   std::cout << x << std::endl;
-   // or call x.real() and x.imag() to get the real/complex part
- }
+AEquation := TCubic.Create(5, -3, 1, 2);
+try
+  AResult := AEquation.GetSolutions(); 
+  
+  for i := Low(AResult) to High(AResult) do
+    Writeln(AResult[i].ToString);
+finally
+  AEquation.Free;
+end;
+
+end;
  
  /*
    ====== OUTPUT ======
    
-   (-1.93877822138267,0)
-   (0.719389110691337,0.878607528100661)
-   (0.719389110691337,0.878607528100661)
+   -1,93877822138267 + 0i
+   0,719389110691337 + 0,878607528100661i
+   0,719389110691337 - 0,878607528100661i
  */
  ```
  
-The `solutions` variable is a vector of `std::complex` so the result is in the format `(realPart, imagPart)`; the usage of the other classes is identical. Please note that the parameters in input start from the coefficient with the **lower** degree so `2x^3 + x^2 - 3x + 5` is `test{ 5, -3, 1, 2 }` (the reverse order). Another way:
+The `TPolyResult` variable is a vector of `Complex` so the result is in the format `realPart + imagPart`; the usage of the other classes is identical. Please note that the parameters in input start from the coefficient with the **lower** degree so `2x^3 + x^2 - 3x + 5` is `TCubic.Create(5, -3, 1, 2)` (the reverse order). Another way:
 
 ```c++
-Equation test{ std::move("2x^3+x^2-3x+5") };
-const auto& [x0, residual, list] = test.solveEquation(Algorithm::Secant, { -2, -1.5, 1.0e-10, 20 }, true);
+AEquation := TEquation.Create('2*x^3+x^2-3*x+5');
+AResult := AEquation.SolveEquation(TAlgorithm.Secant, [-2, -1.5, 1.0e-10, 20], true);
 ```
 
 There's also the `PolyEquation` class that finds every root, real and complex, of a given polynomial (whose degree should be equal or greater than 1). This root finding algorithm gives you an approximation of the solutions; of course it can be used with polynomials of degree 2, 3 and 4 as well but my recommendation is:
