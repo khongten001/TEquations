@@ -137,7 +137,7 @@ begin
       if (y - a = 0) or (k1 = 0) then break;
       y := 1 / (y - a) ;
     end;
-  until (Abs(abs(d) - h1 / k1) <= abs(d) * 0.000001);
+  until (Abs(abs(d) - h1 / k1) <= abs(d) * 0.0000000001);
 
   if (d < 0) then
     sign := -1;
