@@ -142,3 +142,21 @@ The `solutions` variable is a vector of `std::complex` so the result is in the f
 Equation test{ std::move("2x^3+x^2-3x+5") };
 const auto& [x0, residual, list] = test.solveEquation(Algorithm::Secant, { -2, -1.5, 1.0e-10, 20 }, true);
 ```
+
+There's also the `PolyEquation` class that finds every root, real and complex, of a given polynomial (whose degree should be equal or greater than 1). This root finding algorithm gives you an approximation of the solutions; of course it can be used with polynomials of degree 2, 3 and 4 as well but my recommendation is:
+
+  - Use `Quadratic`, `Cubic`, `Quartic` for 2nd, 3rd and 4th degree polynomials (you won't have an approximation of the solutions)
+  - Use `PolyEquation` for polynomials with a degree equal or higher than 5 (you'll get an approximation of the solutions)
+  
+Of course, if you wish, you can use the `Equation` as you've seen above and use a generic root finding algorithm. The usage is exactly the same as the other polynomial classes but with the exception that you have an extra parameter: the algorithm that has to be used to find the roots.
+
+```c++
+//f(x) = x^5 - 2x^3 + x^2 - 3x + 5
+PolyEquation test{ {5, -3, 1, -2, 0, 1}, PolyAlgorithm::Laguerre };
+auto sol = test.getSolutions();
+
+for (const auto& x : sol) {
+  std::cout << x << std::endl;
+}```
+
+The algorithms supported in this class are Laguerre and Bairstrow but you can create new ones just adding members to the algorithm container inside the class (which is a `std::map`).
