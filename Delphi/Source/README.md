@@ -174,52 +174,44 @@ The square root of 3 is an irrational number and it cannot be represented as fra
 
 I'll repeat it: keep in mind that this class gives an approximated fractional representation. Anyway this class can be useful in some cases:
 
-```c++
-using namespace NA_F;
-td::cout.precision(15);
-
-try {
-
-  Fraction s{ 5.675 };
+```delphi
+try
+  s := TFraction.Create(5.675);
   //OUTPUT: 227/40
-  std::cout << s.toString() << std::endl;   
+  Writeln(s.ToString);
 
-  Fraction t{ "24/62" };
+  t := TFraction.Create('24/62');
   //OUTPUT: 24/62
-  std::cout << t.toString() << std::endl;
-  t.Reduce();
+  Writeln(t.ToString);
+  t.Reduce;
   //OUTPUT: 12/31
-  std::cout << t.toString() << std::endl;
+  Writeln(t.ToString);
   //OUTPUT: 0.38709677419...
-  std::cout << t.toDouble() << std::endl;
-	
-} catch (const std::exception& err) {
-std::cerr << "Ops: " << err.what() << std::endl;
-}
+  Writeln(t.ToDouble.ToString);
+except
+  on E : Exception do
+    Writeln(E.Message);
+end;
 ```
 
 You can also execute common operations between fraction objects such as:
 
-```c++
-using namespace NA_F;
-td::cout.precision(15);
+```delphi
+try
+  s := TFraction.Create(5.675);
+  s.Inverse;
 
-try {
+  t := TFraction.Create('1/3');
+  s.Negate;
 
-  Fraction s{ 5.675 };
-  s.Inverse();
+  u := s + t;
+  u.Reduce;
 
-  Fraction t{ "1/3" };
-  s.Negate();
-  
-  Fraction u = s + t;
-  u.Reduce();
-  ++u;
-  
-  //OUTPUT: 788/681
-  std::cout << u.toString() << std::endl;
-	
-} catch (const std::exception& err) {
-std::cerr << "Ops: " << err.what() << std::endl;
-}
+  Writeln(u.ToString);
+  //OUTPUT: 107/681
+
+except
+  on E : Exception do
+    Writeln(E.Message);
+end;
 ```
