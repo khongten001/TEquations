@@ -144,25 +144,28 @@ There's also the `PolyEquation` class that finds every root, real and complex, o
   
 Of course, if you wish, you can use the `Equation` as you've seen above and use a generic root finding algorithm. The usage is exactly the same as the other polynomial classes but with the exception that you have an extra parameter: the algorithm that has to be used to find the roots.
 
-```c++
+```delphi
 //f(x) = x^5 - 2x^3 + x^2 - 3x + 5
-PolyEquation test{ {5, -3, 1, -2, 0, 1}, PolyAlgorithm::Laguerre };
-auto sol = test.getSolutions();
+AEquation := TPolyEquation.Create([5, -3, 1, -2, 0, 1], TPolyAlgorithm.Laguerre);
+try
+  AResult := AEquation.GetSolutions;
 
-for (const auto& x : sol) {
-  std::cout << x << std::endl;
-}
+  for i := Low(AResult) to High(AResult) do
+    Writeln(AResult[i].ToString);
+finally
+  AEquation.Free;
+end;
 ```
 
-The algorithms supported in this class are Laguerre and Bairstrow but you can create new ones just adding members to the algorithm container inside the class (which is a `std::map`).
+The algorithms supported in this class are Laguerre and Bairstrow but you can create new ones just adding members to the algorithm container inside the class (which is a `TDictionary`).
 
 # Notes
 
 I have added a `Fraction` class that may be useful if you have to deal with fractions as input/output. Please note that the algorithms will output an **approximated fractional representation**, which means this:
 
-```c++
-Fraction s{ std::sqrt(3) };
-std::cout << s.toString();
+```delphi
+s := TFraction.Create( sqrt(3) );
+Writeln(s.ToString);
 
 // OUTPUT: 191861/110771
 ```
