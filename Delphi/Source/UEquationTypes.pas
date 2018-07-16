@@ -23,6 +23,7 @@ type
 type
   IEquation = interface
     ['{B5477C50-96CE-496A-8658-8D8240237EA9}']
+    function ElapsedMilliseconds: Int64;
     function EvaluateOn(const FPoint: double): double;
     function SolveEquation(Algoritm: TAlgorithm;
                            AInputList: array of double;
@@ -49,6 +50,12 @@ type
 
 type
   TPolyCode = reference to function(const APoints: array of double): TPolyResult;
+
+type
+  IPolyBase = interface
+    ['{F04E0939-8122-4ACB-A296-3BBA1FC0B7DB}']
+    function GetSolutions: TPolyResult;
+  end;
 
 implementation
 
