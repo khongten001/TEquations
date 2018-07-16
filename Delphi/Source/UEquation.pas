@@ -4,14 +4,16 @@ interface
 
 uses
   Classes, ParseExpr, UEquationTypes, Generics.Collections, StrUtils, Polynomial,
-  Complex, Math;
+  Complex, Math, Diagnostics;
 
 //Generic - Equations
 type
   TEquation = class(TInterfacedObject, IEquation)
     strict private
       Fx: double;
+      FTime: Int64;
       FIndex: integer;
+      FElapsed: TStopWatch;
       FParser: TExpressionParser;
       FAlgorithm: TDictionary<TAlgorithm, TAlgoritmCode>;
     protected
@@ -19,6 +21,7 @@ type
     public
       constructor Create(const AEquation: string);
       destructor Destroy; override;
+      function ElapsedMilliseconds: Int64;
       function EvaluateOn(const FPoint: double): double;
       function EvalDerivative(FPoint: double): double;
       function SolveEquation(Algoritm: TAlgorithm;
@@ -28,7 +31,7 @@ type
 
 //Specific - Polynomials of 2nd, 3rd and 4th degree
 type
-  TPolyBase = class abstract
+  TPolyBase = class abstract(TInterfacedObject, IPolyBase)
     private
       FPoly, FDerivative: TPolynomial;
       FDegree: integer;
@@ -89,6 +92,8 @@ begin
   FAlgorithm := TDictionary<TAlgorithm, TAlgoritmCode>.Create;
   Init();
 
+  FTime := 0;
+
   //Setup the parser
   FParser := TCstyleParser.Create;
   FParser.Optimize := true;
@@ -110,6 +115,11 @@ begin
   Result := FParser.AsFloat[FIndex];
 end;
 
+function TEquation.ElapsedMilliseconds: Int64;
+begin
+  Result := FTime;
+end;
+
 function TEquation.EvalDerivative(FPoint: double): double;
   const h = 1.0e-10;
 begin
@@ -123,7 +133,10 @@ function TEquation.SolveEquation(Algoritm: TAlgorithm;
                                  AInputList: array of double;
                                  AGuessList: boolean): TResult;
 begin
+  FElapsed := TStopwatch.StartNew;
   Result := FAlgorithm.Items[Algoritm](AInputList, AGuessList);
+  FElapsed.Stop;
+  FTime := FElapsed.ElapsedMilliseconds;
 end;
 
 procedure TEquation.Init;
