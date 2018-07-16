@@ -130,6 +130,25 @@ end;
 *)
  ```
  
+You can also use an the interface `IPolyBase` and I really suggest that to you because it will make your code shorter and more readable. An equivalent implementation of the code seen above would be the following:
+
+```delphi
+procedure Test;
+var
+  AEquation: IPolyBase;
+  AResult: TPolyResult;
+  i: integer;
+begin
+
+  AEquation := TCubic.Create(5, -3, 1, 2);
+  AResult := AEquation.GetSolutions();
+
+  for i := Low(AResult) to High(AResult) do
+    Writeln(AResult[i].ToString);
+    
+end.
+```
+ 
 The `TPolyResult` variable is a vector of `Complex` so the result is in the format `realPart + imagPart`; the usage of the other classes is identical. Please note that the parameters in input start from the coefficient with the **lower** degree so `2x^3 + x^2 - 3x + 5` is `TCubic.Create(5, -3, 1, 2)` (the reverse order). Another way:
 
 ```delphi
