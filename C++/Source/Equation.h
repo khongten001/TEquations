@@ -40,21 +40,24 @@ namespace NA_Equation {
 
 	class Equation {
 	private:
-		const double h = 1.0e-10;
+		const double h = 1.0e-13;
 
 		double x;
+		double time;
 		std::string expr;
 		FunctionParser parser;		
 		std::map<Algorithm, AlgorithmCode> algorithmList;
 	protected:
 		void init();
 	public:
-		Equation(const std::string& expression = "0") : expr(expression), x(0) {
+		Equation(const std::string& expression = "0") : expr(expression), x(0), time(0) {
 			parser.Parse(this->expr, "x");
 			init();
 		}	
 		double evaluateOn(double x);
-		double evaluateDerivative(double x);
+		double elapsedMilliseconds() const;
+		double evaluateDerivative(double x);		
+		Result solveEquation(double guess);
 		Result solveEquation(Algorithm algorithm, const std::vector<double>& inputList, bool guessList = false);
 	};
 
