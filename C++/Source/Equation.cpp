@@ -1,5 +1,6 @@
 #include "Equation.h"
 #include <cmath>
+#include <chrono>
 #include <algorithm>
 
 namespace NA_Equation {
@@ -54,6 +55,10 @@ namespace NA_Equation {
 		return parser.Eval(var);
 	}
 
+	double Equation::elapsedMilliseconds() const {
+		return time;
+	}
+
 	double Equation::evaluateDerivative(double x) {
 		double var[1] = { x + h };
 		double res = parser.Eval(var);
@@ -62,8 +67,17 @@ namespace NA_Equation {
 		return (res - parser.Eval(var2)) / h;
 	}
 
+	Result Equation::solveEquation(double guess) {
+		return this->solveEquation(Algorithm::Newton, {guess, 1.0e-10, 20}, false);
+	}
+
 	Result Equation::solveEquation(Algorithm algorithm, const std::vector<double>& inputList, bool guessList) {
-		return algorithmList.at(algorithm)(inputList, guessList);
+		auto t1 = std::chrono::high_resolution_clock::now();
+		auto result = algorithmList.at(algorithm)(inputList, guessList);
+		auto t2 = std::chrono::high_resolution_clock::now();
+
+		this->time = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
+		return result;
 	}
 
 	void Equation::init() {
@@ -329,11 +343,13 @@ namespace NA_Equation {
 	void PolyEquation::init() {
 		//Laguerre
 		algorithm[PolyAlgorithm::Laguerre] = [](const std::vector<double>& points) {
+			//missing implementation, will do it soon...
 			return PolyResult{};
 		};
 
-		//Laguerre
+		//Bairstrow
 		algorithm[PolyAlgorithm::Bairstrow] = [](const std::vector<double>& points) {
+			//missing implementation, will do it soon...
 			return PolyResult{};
 		};
 	}
