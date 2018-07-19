@@ -112,6 +112,7 @@ end;
 
 function TEquation.EvaluateOn(const FPoint: double): double;
 begin
+  Fx := FPoint;
   Result := FParser.AsFloat[FIndex];
 end;
 
