@@ -114,7 +114,8 @@ namespace NA_Equation {
 		PolyAlgorithm method;
 		void init();
 	public:
-		explicit PolyEquation(const std::vector<double>& coeff, PolyAlgorithm method_) : PolyBase(coeff), method(method_) {}
+		explicit PolyEquation(const std::vector<double>& coeff, PolyAlgorithm method_) : PolyBase(coeff), method(method_) { init(); }
+		PolyEquation(std::vector<double>&& coeff, PolyAlgorithm method_) : PolyBase(std::move(coeff)), method(method_) { init(); }
 		PolyResult getSolutions() const override;
 	};
 }
