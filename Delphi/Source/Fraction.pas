@@ -177,12 +177,14 @@ begin
     begin
      Result.aNumerator := StrToInt(S);
      Result.aDenominator := 1;
+    end
+  else
+    begin
+      numStr := Trim(Copy(S, 1, BarPos - 1));
+      denomStr := Trim(Copy(S, BarPos + 1, Length(S)));
+      Result.aNumerator := StrToInt(numStr);
+      Result.aDenominator := StrToInt(denomStr);
     end;
-
-  numStr := Trim(Copy(S, 1, BarPos - 1));
-  denomStr := Trim(Copy(S, BarPos + 1, Length(S)));
-  Result.aNumerator := StrToInt(numStr);
-  Result.aDenominator := StrToInt(denomStr);
 end;
 
 procedure TFraction.Negate;
