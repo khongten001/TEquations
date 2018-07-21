@@ -1,7 +1,7 @@
 #include "Fraction.h"
 #include <cmath>
 
-namespace NA_F {
+namespace NA_Fraction {
 
 	Fraction::Fraction(const std::string& f) {
 		auto barPos = f.find("/");
