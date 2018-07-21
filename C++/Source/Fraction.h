@@ -4,7 +4,7 @@
 #include <string>
 #include <exception>
 
-namespace NA_F {
+namespace NA_Fraction {
 
 	struct Fraction {
 	private:
