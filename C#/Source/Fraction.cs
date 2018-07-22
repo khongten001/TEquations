@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace NA_Fraction {
 
@@ -110,6 +110,16 @@ namespace NA_Fraction {
 
         public static Fraction operator /(Fraction fraction1, Fraction fraction2) {
             return new Fraction(fraction1.FNumerator * fraction2.FDenominator, fraction1.FDenominator * fraction2.FNumerator);
+        }
+
+        public static Fraction operator ++(Fraction fraction) {
+            fraction.Numerator += fraction.Denominator;
+            return fraction;
+        }
+
+        public static Fraction operator --(Fraction fraction) {
+            fraction.Numerator += fraction.Denominator;
+            return fraction;
         }
     }
 
