@@ -50,8 +50,12 @@ end;
 
 constructor TFraction.Create(aFraction: string);
 var Temp: TFraction;
+    k: double;
 begin
-  Temp := FromString(aFraction);
+  if (TryStrToFloat(aFraction, k)) then
+    Temp := FromDouble(k)
+  else
+    Temp := FromString(aFraction);
 
   Self.aNumerator := Temp.aNumerator;
   Self.aDenominator := Temp.aDenominator;
