@@ -18,14 +18,14 @@ namespace NA_Equation {
 		int polyDegree;
 		double horner(double x) const;
 	public:
-		explicit Polynomial(std::vector<double> x) : poly(x), polyDegree(x.size() - 1) {
+		explicit Polynomial(const std::vector<double>& x) : poly(x), polyDegree(x.size() - 1) {
 			if (poly[0] == 0)
 				throw std::runtime_error("The highest degree coefficient cannot be zero");
 		};
 		void negate();
 		int getDegree() const;
 		Polynomial getDerivative() const;
-		double evaluateOn(double x) const;		
+		double evaluateOn(double x) const;
 		const std::vector<double>& toStdVector() const;
 
 		auto begin() const { return poly.begin(); }
@@ -38,14 +38,14 @@ namespace NA_Equation {
 	using AlgorithmCode = std::function<Result(std::vector<double>, bool)>;
 	enum class Algorithm { Newton = 0, NewtonWithMultiplicity = 1, Secant = 2 };
 
-	class Equation {
+	class Equation final {
 	private:
 		const double h = 1.0e-13;
 
 		double x;
 		double time;
 		std::string expr;
-		FunctionParser parser;		
+		FunctionParser parser;
 		std::map<Algorithm, AlgorithmCode> algorithmList;
 	protected:
 		void init();
@@ -53,10 +53,14 @@ namespace NA_Equation {
 		Equation(const std::string& expression = "0") : expr(expression), x(0), time(0) {
 			parser.Parse(this->expr, "x");
 			init();
-		}	
+		}
+		Equation(std::string&& expression = "0") : expr(std::move(expression)), x(0), time(0) {
+			parser.Parse(this->expr, "x");
+			init();
+		}
 		double evaluateOn(double x);
 		double elapsedMilliseconds() const;
-		double evaluateDerivative(double x);		
+		double evaluateDerivative(double x);
 		Result solveEquation(double guess);
 		Result solveEquation(Algorithm algorithm, const std::vector<double>& inputList, bool guessList = false);
 	};
@@ -68,20 +72,20 @@ namespace NA_Equation {
 		Polynomial poly;
 	protected:
 		const Polynomial & getPoly() const;
-	public:		
-		explicit PolyBase(std::vector<double> i) : poly(i) {}
+	public:
+		explicit PolyBase(const std::vector<double>& i) : poly(i) {}
 		virtual ~PolyBase() = default;
 
 		virtual PolyResult getSolutions() const = 0;
 		int getDegree() const;
-		Polynomial getDerivative() const;		
+		Polynomial getDerivative() const;
 	};
 
 	class Quadratic : public PolyBase {
 	private:
 		double Fa, Fb, Fc;
 	public:
-		Quadratic(double a, double b, double c) : PolyBase({c, b, a}), Fa(c), Fb(b), Fc(a) {}
+		Quadratic(double a, double b, double c) : PolyBase({ c, b, a }), Fa(c), Fb(b), Fc(a) {}
 		PolyResult getSolutions() const override;
 		double getDiscriminant() const;
 	};
@@ -115,7 +119,6 @@ namespace NA_Equation {
 		void init();
 	public:
 		explicit PolyEquation(const std::vector<double>& coeff, PolyAlgorithm method_) : PolyBase(coeff), method(method_) { init(); }
-		PolyEquation(std::vector<double>&& coeff, PolyAlgorithm method_) : PolyBase(std::move(coeff)), method(method_) { init(); }
 		PolyResult getSolutions() const override;
 	};
 }
