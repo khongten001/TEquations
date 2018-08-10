@@ -108,7 +108,8 @@ var
   AResult: TPolyResult;
   i: integer;
 begin
-
+ 
+  //f(x) = 2x^3 + x^2 - 3x + 5
   AEquation := TCubic.Create(5, -3, 1, 2);
   try
     AResult := AEquation.GetSolutions(); 
