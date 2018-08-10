@@ -182,9 +182,16 @@ begin
 end;
 
 class function TComplex.power(const D: TComplex; exp: double): TComplex;
+var modl, arg, x_log_re, x_log_im, modans: double;
 begin
-  Result.r := System.Math.power((D.r*D.r + D.i*D.i),exp/2)*cos(exp*arctan(D.i/D.r));
-  Result.i := System.Math.power((D.r*D.r + D.i*D.i),exp/2)*sin(exp*arctan(D.i/D.r));
+  modl := System.Sqrt(D.r*D.r + D.i*D.i);
+  arg := System.Math.ArcTan2(D.i, D.r);
+  x_log_re := exp * System.Ln(modl);
+  x_log_im := exp * arg;
+  modans := System.Exp(x_log_re);
+
+  Result.r := modans*System.Cos(x_log_im);
+  Result.i := modans*System.Sin(x_log_im);
 end;
 
 function TComplex.IsZero: Boolean;
