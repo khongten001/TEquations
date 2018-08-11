@@ -8,11 +8,12 @@ namespace NA_Fraction {
 		if (barPos == std::string::npos) {
 			numerator = std::stoi(f);
 			denominator = 1;
-		} else {
+		}
+		else {
 			numerator = std::stoi(f.substr(0, barPos));
 			denominator = std::stoi(f.substr(barPos + 1, f.length()));
-			
-			if (denominator == 0) 
+
+			if (denominator == 0)
 				throw std::runtime_error("Denominator cannot be zero.");
 		}
 	}
@@ -66,7 +67,15 @@ namespace NA_Fraction {
 	}
 
 	std::string Fraction::toString() const {
-		return std::string( std::to_string(numerator) + "/" + std::to_string(denominator) );
+		return std::string(std::to_string(numerator) + "/" + std::to_string(denominator));
+	}
+
+	Fraction::operator double() const {
+		return toDouble();
+	}
+
+	Fraction::operator std::string() const {
+		return toString();
 	}
 
 	Fraction& Fraction::operator++() {
@@ -92,9 +101,9 @@ namespace NA_Fraction {
 	}
 
 	Fraction operator+(const Fraction& fraction1, const Fraction& fraction2) {
-		return Fraction(fraction1.getNumerator()*fraction2.getDenominator() + fraction1.getDenominator()*fraction2.getNumerator() , fraction1.getDenominator() * fraction2.getDenominator());
+		return Fraction(fraction1.getNumerator()*fraction2.getDenominator() + fraction1.getDenominator()*fraction2.getNumerator(), fraction1.getDenominator() * fraction2.getDenominator());
 	}
-	
+
 	Fraction operator-(const Fraction& fraction1, const Fraction& fraction2) {
 		return Fraction(fraction1.getNumerator()*fraction2.getDenominator() - fraction1.getDenominator()*fraction2.getNumerator(), fraction1.getDenominator() * fraction2.getDenominator());
 	}
