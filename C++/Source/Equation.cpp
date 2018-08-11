@@ -8,11 +8,9 @@ namespace NA_Equation {
 	// --------- POLYNOMIAL CLASS --------- //
 
 	double Polynomial::horner(double x) const {
-		auto k = poly.size() - 1;
-		auto result = poly[k];
-
-		for (auto i = k - 1; i > 0; --i)
-			result = result * x + poly[i];
+		int power = 0;
+		double result = 0;
+		std::for_each(poly.rbegin(), poly.rend(), [&](int val) { result += val * pow(x, power); ++power; });
 		return result;
 	}
 
@@ -44,6 +42,10 @@ namespace NA_Equation {
 		return this->horner(x);
 	}
 
+	double Polynomial::operator[](int x) {
+		return poly[x];
+	}
+
 	const std::vector<double>& Polynomial::toStdVector() const {
 		return poly;
 	}
@@ -68,7 +70,7 @@ namespace NA_Equation {
 	}
 
 	Result Equation::solveEquation(double guess) {
-		return this->solveEquation(Algorithm::Newton, {guess, 1.0e-10, 20}, false);
+		return this->solveEquation(Algorithm::Newton, { guess, 1.0e-10, 20 }, false);
 	}
 
 	Result Equation::solveEquation(Algorithm algorithm, const std::vector<double>& inputList, bool guessList) {
@@ -232,6 +234,10 @@ namespace NA_Equation {
 		return poly.getDerivative();
 	}
 
+	double PolyBase::evaluateOnX(double x) const {
+		return poly.evaluateOn(x);
+	}
+
 	double Quadratic::getDiscriminant() const {
 		return Fb * Fb - 4 * Fa*Fc;
 	}
@@ -241,14 +247,14 @@ namespace NA_Equation {
 		auto result = PolyResult{};
 		result.reserve(2);
 
-		result.emplace_back( (-Fb + std::sqrt(delta)) / (2 * Fa) );
-		result.emplace_back( (-Fb - std::sqrt(delta)) / (2 * Fa) );
+		result.emplace_back((-Fb + std::sqrt(delta)) / (2 * Fa));
+		result.emplace_back((-Fb - std::sqrt(delta)) / (2 * Fa));
 
 		return result;
 	}
 
 	double Cubic::getDiscriminant() const {
-		return Fc*Fc*Fb*Fb - 4*Fd*Fb*Fb*Fb - 4*Fc*Fc*Fc*Fa + 18*Fa*Fb*Fc*Fd - 27*Fd*Fd*Fa*Fa;
+		return Fc * Fc*Fb*Fb - 4 * Fd*Fb*Fb*Fb - 4 * Fc*Fc*Fc*Fa + 18 * Fa*Fb*Fc*Fd - 27 * Fd*Fd*Fa*Fa;
 
 	}
 
@@ -274,10 +280,11 @@ namespace NA_Equation {
 			auto theta = std::acos(r / sqrt(-q_cube));
 			auto sqrt_q = sqrt(-q);
 
-			result.emplace_back( (sqrt_q * 2 * cos(theta / 3) - a_over_3) );
-			result.emplace_back( (sqrt_q * 2 * cos((theta + TWO_PI) / 3) - a_over_3) );
-			result.emplace_back( (sqrt_q * 2 * cos((theta + FOUR_PI) / 3) - a_over_3) );
-		} else {
+			result.emplace_back((sqrt_q * 2 * cos(theta / 3) - a_over_3));
+			result.emplace_back((sqrt_q * 2 * cos((theta + TWO_PI) / 3) - a_over_3));
+			result.emplace_back((sqrt_q * 2 * cos((theta + FOUR_PI) / 3) - a_over_3));
+		}
+		else {
 
 			if (delta > 0) {
 				auto sqrt_d = sqrt(delta);
@@ -285,13 +292,14 @@ namespace NA_Equation {
 				auto t = cbrt(r - sqrt_d);
 				auto realPart = a_over_3 + ((s + t) / 2);
 
-				result.emplace_back( (s + t) - a_over_3 );
-				result.emplace_back( -realPart, (sqrt(3)*(-t + s) / 2) );
-				result.emplace_back( -realPart, (sqrt(3)*(-t + s) / 2) );
-			} else {
-				result.emplace_back( 2*cbrt(r) - a_over_3 );
-				result.emplace_back( 2 * cbrt(r) - a_over_3 );
-				result.emplace_back( 2 * cbrt(r) - a_over_3 );
+				result.emplace_back((s + t) - a_over_3);
+				result.emplace_back(-realPart, (sqrt(3)*(-t + s) / 2));
+				result.emplace_back(-realPart, (sqrt(3)*(-t + s) / 2));
+			}
+			else {
+				result.emplace_back(2 * cbrt(r) - a_over_3);
+				result.emplace_back(2 * cbrt(r) - a_over_3);
+				result.emplace_back(2 * cbrt(r) - a_over_3);
 			}
 
 		}
@@ -301,9 +309,9 @@ namespace NA_Equation {
 
 	double Quartic::getDiscriminant() const {
 		auto k = Fb * Fb*Fc*Fc*Fd*Fd - 4.0*Fd*Fd*Fd*Fb*Fb*Fb - 4.0*Fd*Fd*Fc*Fc*Fc*Fa +
-				 18.0*Fd*Fd*Fd*Fc*Fb*Fa - 27.0*Fd*Fd*Fd*Fd*Fa*Fa + 256.0*Fe*Fe*Fe*Fa*Fa*Fa;
-	    auto p = Fe * (-4.0*Fc*Fc*Fc*Fb*Fb + 18.0*Fd*Fc*Fb*Fb*Fb + 16.0*Fc*Fc*Fc*Fc*Fa -
-				 80.0*Fd*Fc*Fc*Fb*Fa - 6.0*Fd*Fd*Fb*Fb*Fa + 144.0*Fd*Fd*Fa*Fa*Fc);
+			18.0*Fd*Fd*Fd*Fc*Fb*Fa - 27.0*Fd*Fd*Fd*Fd*Fa*Fa + 256.0*Fe*Fe*Fe*Fa*Fa*Fa;
+		auto p = Fe * (-4.0*Fc*Fc*Fc*Fb*Fb + 18.0*Fd*Fc*Fb*Fb*Fb + 16.0*Fc*Fc*Fc*Fc*Fa -
+			80.0*Fd*Fc*Fc*Fb*Fa - 6.0*Fd*Fd*Fb*Fb*Fa + 144.0*Fd*Fd*Fa*Fa*Fc);
 		auto r = Fe * Fe*(-27 * Fb*Fb*Fb*Fb + 144 * Fc*Fb*Fb*Fa - 128 * Fc*Fc*Fa*Fa - 192 * Fd*Fb*Fa*Fa);
 
 		return (k + p + r);
@@ -334,8 +342,8 @@ namespace NA_Equation {
 		result.emplace_back(std::complex<double> {(-b - Q7 - std::sqrt(temp)) / 4.0});
 		result.emplace_back(std::complex<double> {(-b - Q7 + std::sqrt(temp)) / 4.0});
 		temp = (4.0 * Q4 / 6.0 - 4.0 * Q6 + Q3 / Q7);
-		result.emplace_back( std::complex<double> {(-b + Q7 - std::sqrt(temp)) / 4.0} );
-		result.emplace_back( std::complex<double> {(-b + Q7 + std::sqrt(temp)) / 4.0} );
+		result.emplace_back(std::complex<double> {(-b + Q7 - std::sqrt(temp)) / 4.0});
+		result.emplace_back(std::complex<double> {(-b + Q7 + std::sqrt(temp)) / 4.0});
 
 		return result;
 	}
@@ -355,6 +363,6 @@ namespace NA_Equation {
 	}
 
 	PolyResult PolyEquation::getSolutions() const {
-		return algorithm.at(method)( getPoly().toStdVector() );
+		return algorithm.at(method)(getPoly().toStdVector());
 	}
 }
