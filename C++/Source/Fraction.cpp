@@ -1,9 +1,14 @@
 #include "Fraction.h"
 #include <cmath>
+#include <regex>
 
 namespace NA_Fraction {
 
 	Fraction::Fraction(const std::string& f) {
+		//this regex ensures that the denominator will never be zero. Only integers and fractions are accepted
+		if (!std::regex_match(f, std::regex{ "(?:[1-9][0-9]*|0)(?:\/[1-9][0-9]*)?" }))
+			throw std::runtime_error("Wrong input format");		
+
 		auto barPos = f.find("/");
 		if (barPos == std::string::npos) {
 			numerator = std::stoi(f);
@@ -12,9 +17,6 @@ namespace NA_Fraction {
 		else {
 			numerator = std::stoi(f.substr(0, barPos));
 			denominator = std::stoi(f.substr(barPos + 1, f.length()));
-
-			if (denominator == 0)
-				throw std::runtime_error("Denominator cannot be zero.");
 		}
 	}
 
