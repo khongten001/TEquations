@@ -6,7 +6,7 @@ namespace NA_Fraction {
 
 	Fraction::Fraction(const std::string& f) {
 		//this regex ensures that the denominator will never be zero. Only integers and fractions are accepted
-		if (!std::regex_match(f, std::regex{ "(?:[1-9][0-9]*|0)(?:\/[1-9][0-9]*)?" }))
+		if (!std::regex_match(f, std::regex{ "(?:[-]*[1-9][0-9]*|0)(?:\/[1-9][0-9]*)?" }))
 			throw std::runtime_error("Wrong input format");		
 
 		auto barPos = f.find("/");
