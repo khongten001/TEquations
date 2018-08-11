@@ -7,7 +7,6 @@
 #include <string>
 #include <complex>
 #include <functional>
-#include <initializer_list>
 #include "Parser/fparser.hh"
 
 namespace NA_Equation {
@@ -26,12 +25,8 @@ namespace NA_Equation {
 		int getDegree() const;
 		Polynomial getDerivative() const;
 		double evaluateOn(double x) const;
+		double operator[](int x);
 		const std::vector<double>& toStdVector() const;
-
-		auto begin() const { return poly.begin(); }
-		auto end() const { return poly.end(); }
-		auto rbegin() const { return poly.rbegin(); }
-		auto rend() const { return poly.rend(); }
 	};
 
 	using Result = std::tuple<double, double, std::vector<double>>;
@@ -50,11 +45,11 @@ namespace NA_Equation {
 	protected:
 		void init();
 	public:
-		Equation(const std::string& expression = "0") : expr(expression), x(0), time(0) {
+		Equation(const std::string& expression) : expr(expression), x(0), time(0) {
 			parser.Parse(this->expr, "x");
 			init();
 		}
-		Equation(std::string&& expression = "0") : expr(std::move(expression)), x(0), time(0) {
+		Equation(std::string&& expression) : expr(std::move(expression)), x(0), time(0) {
 			parser.Parse(this->expr, "x");
 			init();
 		}
@@ -77,8 +72,9 @@ namespace NA_Equation {
 		virtual ~PolyBase() = default;
 
 		virtual PolyResult getSolutions() const = 0;
-		int getDegree() const;
+		int getDegree() const;		
 		Polynomial getDerivative() const;
+		double evaluateOnX(double x) const;
 	};
 
 	class Quadratic : public PolyBase {
