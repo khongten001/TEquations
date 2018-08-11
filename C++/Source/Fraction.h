@@ -9,11 +9,11 @@ namespace NA_Fraction {
 	struct Fraction {
 	private:
 		int numerator, denominator;
-		int gcd(int a, int b) const;		
+		int gcd(int a, int b) const;
 	public:
 		Fraction(int aNumerator, int aDenominator) : numerator(aNumerator), denominator(aDenominator) {
 			if (aDenominator == 0)
-				throw std::runtime_error("Denominator cannot be zero.");			
+				throw std::runtime_error("Denominator cannot be zero.");
 		}
 		explicit Fraction(const std::string& f);
 		explicit Fraction(double x);
@@ -23,6 +23,8 @@ namespace NA_Fraction {
 		void Inverse();
 		double toDouble() const;
 		std::string toString() const;
+		operator double() const;
+		operator std::string() const;
 		inline int getNumerator() const { return numerator; }
 		inline int getDenominator() const { return denominator; }
 
