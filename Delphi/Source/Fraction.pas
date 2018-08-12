@@ -3,7 +3,7 @@ unit Fraction;
 interface
 
 uses
- SysUtils, Math, RegularExpressions;
+ SysUtils, Math;
 
 type
  TFraction = record
