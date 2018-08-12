@@ -196,12 +196,12 @@ end;
 
 function TComplex.IsZero: Boolean;
 begin
-  Result := Self=ZeroComplex;
+  Result := Self = ZeroComplex;
 end;
 
 function TComplex.IsNonZero: Boolean;
 begin
-  Result := Self<>ZeroComplex;
+  Result := Self <> ZeroComplex;
 end;
 
 function TComplex.Conj: TComplex;
