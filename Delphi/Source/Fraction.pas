@@ -3,7 +3,7 @@ unit Fraction;
 interface
 
 uses
- SysUtils, Math;
+ SysUtils, Math, RegularExpressions;
 
 type
  TFraction = record
@@ -27,6 +27,8 @@ type
      class operator Multiply(fraction1, fraction2: TFraction): TFraction;
      class operator Divide(fraction1, fraction2: TFraction): TFraction;
      class operator Negative(const Value: TFraction): TFraction;
+     class operator Implicit(fraction: TFraction): double;
+     class operator Implicit(fraction: TFraction): string;
      property Numerator: integer read aNumerator;
      property Denominator: integer read aDenominator;
      property ToDouble: double read GetDecimal;
@@ -89,6 +91,16 @@ end;
 function TFraction.GetString: string;
 begin
   Result := aNumerator.ToString + '/' + aDenominator.ToString;
+end;
+
+class operator TFraction.Implicit(fraction: TFraction): string;
+begin
+  Result := fraction.Numerator.ToString + '/' + fraction.Denominator.ToString;
+end;
+
+class operator TFraction.Implicit(fraction: TFraction): double;
+begin
+  Result := fraction.Numerator / fraction.Denominator;
 end;
 
 procedure TFraction.Inverse;
