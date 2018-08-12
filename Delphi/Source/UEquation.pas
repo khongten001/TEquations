@@ -40,6 +40,7 @@ type
     public
       constructor Create(const coeff: array of double);
       function GetSolutions: TPolyResult; virtual; abstract;
+      function EvaluateOn(Point: double): double;
       property GetDerivative: TPolynomial read FDerivative;
       property GetDegree: integer read FDegree;
   end;
@@ -304,6 +305,11 @@ begin
 
   if FPoly.Coeff[FDegree] = 0 then
     raise TPolyException.Create('Highest power coefficient cannot be zero.');
+end;
+
+function TPolyBase.EvaluateOn(Point: double): double;
+begin
+  Result := FPoly.EvaluateOn(Point);
 end;
 
 { TQuadratic }
