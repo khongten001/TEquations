@@ -18,9 +18,6 @@ Here's a step by step installation guide that's good for Visual Studio:
 The `Equation` class is a generic equation solver that takes the expression (as string) in input. Please note that an expression must be properly written otherwise an exception will be raised (for example `2*x` is good but `2x` not). Let's see an example where we try to solve `f(x) = e^x-2x^2`:
 
 ``` c#
-using namespace NA_Equation;
-std::cout.precision(15);
-
 try {
     Equation e = new Equation("exp(x)-2*x^2");
     (double x0, double res, List<double> g) = e.SolveEquation(Algorithm.Newton, new List<double> { 1.3, 1.0e-10, 20, 1 }, true);
@@ -33,9 +30,9 @@ try {
         Console.WriteLine(val);
 
     Console.ReadKey();
-  } catch (Exception e) {
+} catch (Exception e) {
     Console.WriteLine(e.Message);
-  }
+}
 
 /* 
 ====== OUTPUT ======
