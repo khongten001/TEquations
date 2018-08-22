@@ -92,3 +92,61 @@ This library implements some root finding algorithms (and maybe more in the futu
 # Specific usage
 
 Coming soon...
+
+# Notes
+
+I have added a `Fraction` class that may be useful if you have to deal with fractions as input/output. Please note that the algorithms will output an **approximated fractional representation**, which means this:
+
+```c#
+Fraction s{ std::sqrt(3) };
+std::cout << s.toString();
+
+// OUTPUT: 13775/7953
+```
+
+The square root of 3 is an irrational number and it cannot be represented as fraction but here we get that `sqrt(3) = 13775/7953`!  The reason is that the algorithm computes the square root of 3, it takes some of the decimal digits (1.*732050807...*) and then it calculates the fractional value of 1.732050807...
+
+I'll repeat it: keep in mind that this class gives an approximated fractional representation. Anyway this class can be useful in some cases:
+
+```c#
+try {
+  Fraction f = new Fraction(5.675);
+  //OUTPUT: 227/40
+  Console.WriteLine(f.ToString());
+
+  Fraction t = new Fraction("24/62");
+  //OUTPUT: 24/62
+  Console.WriteLine(t.ToString());
+  t.Reduce();
+  //OUTPUT: 12/31
+  Console.WriteLine(t.ToString());
+  //OUTPUT: 0.38709677419...
+  Console.WriteLine(t.ToDouble());
+
+  Console.ReadKey();
+} catch (Exception e) {
+  Console.WriteLine(e.Message);
+}
+```
+
+You can also execute common operations between fraction objects such as:
+
+```c#
+try {
+  Fraction s = new Fraction(5.675);
+  s.Inverse();
+  
+  Fraction t = new Fraction("1/3");
+  t.Negate();
+  
+  Fraction u = s + t;
+  u.Reduce();
+  u++;
+  
+  Console.WriteLine(u);
+
+  Console.ReadKey();
+} catch (Exception e) {
+  Console.WriteLine(e.Message);
+}
+```
