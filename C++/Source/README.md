@@ -213,13 +213,13 @@ try {
   s.Inverse();
 
   Fraction t{ "1/3" };
-  s.Negate();
+  t.Negate();
   
   Fraction u = s + t;
   u.Reduce();
   ++u;
   
-  //OUTPUT: 788/681
+  //OUTPUT: 574/681
   std::cout << u.toString() << std::endl;
 	
 } catch (const std::exception& err) {
