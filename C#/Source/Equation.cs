@@ -1,13 +1,14 @@
-﻿using System;
+using System;
 using System.Diagnostics;
+using System.Numerics;
 using System.Collections.Generic;
 using org.mariuszgromada.math.mxparser;
 
 namespace EquationSolver {
 
-    using AlgorithmCode = Func<List<double>, bool, (double, double, List<double>)>;    
+    using AlgorithmCode = Func<List<double>, bool, (double, double, List<double>)>; 
 
-    struct Polynomial {
+    public struct Polynomial {
         private double[] poly;
 
         private int degree;
@@ -68,7 +69,7 @@ namespace EquationSolver {
 
     public enum Algorithm { Newton = 0, NewtonWithMultiplicity = 1, Secant = 2 }
 
-    sealed class Equation {
+    public sealed class Equation {
         private const double h = 1.0e-13;
         
         private long time;
@@ -235,4 +236,173 @@ namespace EquationSolver {
         }
 
     }
+
+    public abstract class PolyBase {
+        private Polynomial Poly;
+
+        private int PDegree;
+
+        protected Polynomial GetPoly { 
+            get { return Poly; }
+        }
+
+        public PolyBase(List<double> coeff) {
+            Poly = new Polynomial(coeff);
+            PDegree = Poly.Degree;
+        }
+
+        public abstract List<Complex> GetSolutions();
+
+        public double EvaluateOn(double point) {
+            return Poly.EvaluateOn(point);
+        }
+
+        public int Degree => PDegree;
+
+        public Polynomial Derivative => Poly.GetDerivative();
+    }
+
+    public class Quadratic: PolyBase {
+        private double Fa, Fb, Fc;
+
+        public Quadratic(double a, double b, double c) : base(new List<double> { a, b, c }) {
+            Fa = c;
+            Fb = b;
+            Fc = a;
+        }
+
+        public double GetDiscriminant() 
+            => Fb * Fb - 4 * Fa * Fc;
+
+        public override List<Complex> GetSolutions() {
+            List<Complex> result = new List<Complex> { };
+
+            var delta = GetDiscriminant();
+            if (delta > 0) {
+                result.Add(new Complex(((-Fb + Math.Sqrt(delta)) / (2 * Fa)), 0) );
+                result.Add(new Complex(((-Fb - Math.Sqrt(delta)) / (2 * Fa)), 0));
+            } else {
+                result.Add(new Complex( -Fb / (2 * Fa), Math.Sqrt(Math.Abs(delta)) / (2 * Fa)) );
+                result.Add(new Complex( -Fb / (2 * Fa), -Math.Sqrt(Math.Abs(delta)) / (2 * Fa)));
+            }
+
+            return result;
+        }
+    }
+
+    public class Cubic : PolyBase {
+        private double Fa, Fb, Fc, Fd;
+
+        public Cubic(double a, double b, double c, double d) : base(new List<double> { a, b, c, d }) {
+            Fa = d;
+            Fb = c;
+            Fc = b;
+            Fd = a;
+        }
+
+        public double GetDiscriminant()
+            => Fc * Fc * Fb * Fb - 4 * Fd * Fb * Fb * Fb - 4 * Fc * Fc * Fc * Fa + 18 * Fa * Fb * Fc * Fd - 27 * Fd * Fd * Fa * Fa;
+
+        private double Cbrt(double val) {
+            return (val >= 0) ? Math.Pow(val, 1 / 3) : -Math.Pow(-val, 1 / 3);        
+        }
+
+        public override List<Complex> GetSolutions() {
+            List<Complex> result = new List<Complex> { };
+
+            double TWO_PI = 2 * Math.Acos(-1);
+            double FOUR_PI = 4 * Math.Acos(-1);
+
+            var a = Fb / Fa;
+            var b = Fc / Fa;
+            var c = Fd / Fa;
+            var q = (3 * b - a * a) / 9.0;
+            var r = (9 * a * b - 27 * c - 2 * a * a * a) / 54.0;
+
+            var a_over_3 = a / 3;
+            var q_cube = q * q * q;
+            var delta = q_cube + (r * r);
+
+            if (delta < 0) {
+                var theta = Math.Acos(r / Math.Sqrt(-q_cube));
+                var sqrt_q = Math.Sqrt(-q);
+
+                result.Add(new Complex((sqrt_q * 2 * Math.Cos(theta / 3) - a_over_3), 0));
+                result.Add(new Complex((sqrt_q * 2 * Math.Cos((theta + TWO_PI) / 3) - a_over_3), 0));
+                result.Add(new Complex((sqrt_q * 2 * Math.Cos((theta + FOUR_PI) / 3) - a_over_3), 0));
+            } else {
+
+                if (delta > 0) {
+                    var sqrt_d = Math.Sqrt(delta);
+                    var s = Cbrt(r + sqrt_d);
+                    var t = Cbrt(r - sqrt_d);
+                    var realPart = a_over_3 + ((s + t) / 2);
+
+                    result.Add(new Complex((s + t) - a_over_3, 0));
+                    result.Add(new Complex(-realPart, (Math.Sqrt(3) * (-t + s) / 2)));
+                    result.Add(new Complex(-realPart, (Math.Sqrt(3) * (-t + s) / 2)));
+                } else {
+                    result.Add(new Complex(2 * Cbrt(r) - a_over_3, 0));
+                    result.Add(new Complex(2 * Cbrt(r) - a_over_3, 0));
+                    result.Add(new Complex(2 * Cbrt(r) - a_over_3, 0));
+                }
+
+            }
+
+            return result;
+        }
+    }
+
+    public class Quartic : PolyBase {
+        private double Fa, Fb, Fc, Fd, Fe;
+
+        public Quartic(double a, double b, double c, double d, double e) : base(new List<double> { a, b, c, d, e }) {
+            Fa = e;
+            Fb = d;
+            Fc = c;
+            Fd = b;
+            Fe = a;
+        }
+
+        public double GetDiscriminant() {
+            var k = Fb * Fb * Fc * Fc * Fd * Fd - 4.0 * Fd * Fd * Fd * Fb * Fb * Fb - 4.0 * Fd * Fd * Fc * Fc * Fc * Fa +
+            18.0 * Fd * Fd * Fd * Fc * Fb * Fa - 27.0 * Fd * Fd * Fd * Fd * Fa * Fa + 256.0 * Fe * Fe * Fe * Fa * Fa * Fa;
+            var p = Fe * (-4.0 * Fc * Fc * Fc * Fb * Fb + 18.0 * Fd * Fc * Fb * Fb * Fb + 16.0 * Fc * Fc * Fc * Fc * Fa -
+                80.0 * Fd * Fc * Fc * Fb * Fa - 6.0 * Fd * Fd * Fb * Fb * Fa + 144.0 * Fd * Fd * Fa * Fa * Fc);
+            var r = Fe * Fe * (-27 * Fb * Fb * Fb * Fb + 144 * Fc * Fb * Fb * Fa - 128 * Fc * Fc * Fa * Fa - 192 * Fd * Fb * Fa * Fa);
+
+            return (k + p + r);
+        }            
+
+        public override List<Complex> GetSolutions() {
+            List<Complex> result = new List<Complex> { };
+
+            var a = new Complex(Fa, 0);
+            var b = new Complex(Fb / Fa, 0);
+            var c = new Complex(Fc / Fa, 0);
+            var d = new Complex(Fd / Fa, 0);
+            var e = new Complex(Fe / Fa, 0);
+
+            var Q1 = c * c - 3.0 * b * d + 12.0 * e;
+            var Q2 = 2.0 * c * c * c - 9.0 * b * c * d + 27.0 * d * d + 27.0 * b * b * e - 72.0 * c * e;
+            var Q3 = 8.0 * b * c - 16.0 * d - 2.0 * b * b * b;
+            var Q4 = 3.0 * b * b - 8.0 * c;
+
+            var temp = Q2 * Q2 / 4.0 - Q1 * Q1 * Q1;
+            var Q5 = Complex.Pow(Complex.Sqrt(temp) + Q2 / 2.0, 1.0 / 3.0);
+            var Q6 = (Q1 / Q5 + Q5) / 3.0;
+            temp = Q4 / 12.0 + Q6;
+            var Q7 = Complex.Sqrt(temp) * 2.0;
+
+            temp = (4.0 * Q4 / 6.0 - 4.0 * Q6 - Q3 / Q7);
+            result.Add((-b - Q7 - Complex.Sqrt(temp)) / 4.0);
+            result.Add((-b - Q7 + Complex.Sqrt(temp)) / 4.0);
+            temp = (4.0 * Q4 / 6.0 - 4.0 * Q6 + Q3 / Q7);
+            result.Add((-b + Q7 - Complex.Sqrt(temp)) / 4.0);
+            result.Add((-b + Q7 + Complex.Sqrt(temp)) / 4.0);
+
+            return result;
+        }
+    }
+    
 }
