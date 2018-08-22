@@ -51,10 +51,9 @@ namespace NA_Fraction {
 	}
 
 	void Fraction::Reduce() {
-		auto sign = (numerator < 0) ? -1 : 1;
 		int LGCD = gcd(numerator, denominator);
-		numerator = (sign * numerator) / LGCD;
-		denominator = (denominator * sign) / LGCD;
+		numerator = numerator / LGCD;
+		denominator = denominator / LGCD;
 	}
 
 	void Fraction::Inverse() {
