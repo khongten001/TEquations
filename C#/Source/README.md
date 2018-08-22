@@ -140,9 +140,8 @@ try {
   t.Negate();
   
   Fraction u = s + t;
-  u.Reduce();
   u++;
-  
+  //OUTPUT: 574/681
   Console.WriteLine(u);
 
   Console.ReadKey();
