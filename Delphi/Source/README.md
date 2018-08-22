@@ -222,13 +222,13 @@ try
   s.Inverse;
 
   t := TFraction.Create('1/3');
-  s.Negate;
+  t.Negate;
 
   u := s + t;
   u.Reduce;
 
   Writeln(u.ToString);
-  //OUTPUT: 107/681
+  //OUTPUT: -107/681
 
 except
   on E : Exception do
