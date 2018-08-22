@@ -3,7 +3,7 @@ unit Fraction;
 interface
 
 uses
- SysUtils, Math;
+ SysUtils, Math, RegularExpressions;
 
 type
  TFraction = record
@@ -29,6 +29,8 @@ type
      class operator Negative(const Value: TFraction): TFraction;
      class operator Implicit(fraction: TFraction): double;
      class operator Implicit(fraction: TFraction): string;
+     class operator Implicit(fraction: double): TFraction;
+     class operator Implicit(fraction: string): TFraction;
      property Numerator: integer read aNumerator;
      property Denominator: integer read aDenominator;
      property ToDouble: double read GetDecimal;
@@ -119,31 +121,6 @@ begin
   aDenominator := aDenominator div LGCD;
 end;
 
-//operators overloads
-
-class operator TFraction.Add(fraction1, fraction2: TFraction): TFraction;
-begin
-  Result.aNumerator := fraction1.Numerator*fraction2.Denominator+fraction1.Denominator*fraction2.Numerator;
-  Result.aDenominator := fraction1.Denominator*fraction2.Denominator;
-end;
-
-class operator TFraction.Subtract(fraction1, fraction2: TFraction): TFraction;
-begin
-  Result := fraction1 + (-fraction2);
-end;
-
-class operator TFraction.Multiply(fraction1, fraction2: TFraction): TFraction;
-begin
-  Result.aNumerator := fraction1.Numerator*fraction2.Numerator;
-  Result.aDenominator := fraction1.Denominator*fraction2.Denominator;
-end;
-
-class operator TFraction.Divide(fraction1, fraction2: TFraction): TFraction;
-begin
-  Result.aNumerator := fraction1.Numerator*fraction2.Denominator;
-  Result.aDenominator := fraction1.Denominator*fraction2.Numerator;
-end;
-
 function TFraction.FromDouble(const d: double): TFraction;
 var h1, h2, k1, k2, y, a, aux, sign: double;
 begin
@@ -173,7 +150,7 @@ begin
 
   if not(h1 = 0) then
     begin
-      Result.aNumerator := Round(sign*h1);
+      Result.aNumerator := Round(sign * Abs(h1));
       Result.aDenominator := Round(k1);
     end
   else
@@ -212,6 +189,41 @@ class operator TFraction.Negative(const Value: TFraction): TFraction;
 begin
   Result.aNumerator := -Value.aNumerator;
   Result.aDenominator := Value.aDenominator;
+end;
+
+//operators overloads
+
+class operator TFraction.Add(fraction1, fraction2: TFraction): TFraction;
+begin
+  Result.aNumerator := fraction1.Numerator*fraction2.Denominator+fraction1.Denominator*fraction2.Numerator;
+  Result.aDenominator := fraction1.Denominator*fraction2.Denominator;
+end;
+
+class operator TFraction.Subtract(fraction1, fraction2: TFraction): TFraction;
+begin
+  Result := fraction1 + (-fraction2);
+end;
+
+class operator TFraction.Multiply(fraction1, fraction2: TFraction): TFraction;
+begin
+  Result.aNumerator := fraction1.Numerator*fraction2.Numerator;
+  Result.aDenominator := fraction1.Denominator*fraction2.Denominator;
+end;
+
+class operator TFraction.Divide(fraction1, fraction2: TFraction): TFraction;
+begin
+  Result.aNumerator := fraction1.Numerator*fraction2.Denominator;
+  Result.aDenominator := fraction1.Denominator*fraction2.Numerator;
+end;
+
+class operator TFraction.Implicit(fraction: double): TFraction;
+begin
+  Result := TFraction.Create(fraction);
+end;
+
+class operator TFraction.Implicit(fraction: string): TFraction;
+begin
+  Result := TFraction.Create(fraction);
 end;
 
 end.
