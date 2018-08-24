@@ -3,13 +3,15 @@ unit Complex;
 interface
 
 uses
- System.Math, System.SysUtils;
+ System.Math, System.SysUtils, Fraction;
 
 type
  TComplex = record
   private
    r: Double;
    i: Double;
+   fr: TFraction;
+   fi: TFraction;
   public
    constructor Create(const real, imaginary: double);
    class operator Implicit(const D: Double): TComplex;
@@ -39,6 +41,8 @@ type
    function ToString: string;
    property RealPart: Double read r;
    property ImagPart: Double read i;
+   property RealPartFraction: TFraction read fr;
+   property ImagPartFraction: TFraction read fi;
 end;
 
 const
@@ -50,6 +54,9 @@ constructor TComplex.Create(const real, imaginary: double);
 begin
   r := real;
   i := imaginary;
+
+  fr := TFraction.Create(real);
+  fi := TFraction.Create(imaginary);
 end;
 
 class operator TComplex.Implicit(const D: Double): TComplex;
