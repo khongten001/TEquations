@@ -16,4 +16,34 @@
 
 # Usage
 
-Coming soon...
+Let's do an example. Create a new VCL or FMX project, add a Button, add a Memo and drop the `EquationSolver` component (set its `Name` property to `Solver`, just to type less characters!).
+
+**Equation**
+In this section I'll show you how to solve a simple equation such as `f(x) = x^5-3x+1`. Select the component in the Form Designer and do the following:
+
+ 1. Set the `Kind` property to `etEquation` (it's the default option)
+ 2. Expand `(TEquationOptions)` and use one of the following settings (it depends if you want to use Newton or Secant)
+ 
+  <p align="center"><img src="https://github.com/albertodev01/TEquations/blob/master/Delphi/Component/NonVisual/github_images/pmanager.png" /></p>
+  
+  3. Double click the button and type the following code:
+
+``delphi
+procedure TForm1.Button1Click(Sender: TObject);
+var
+  tmp: TSolution;
+  r: double;
+begin
+  tmp := Solver.SolveEquation;
+
+  Memo1.Lines.Add('x0 = ' + tmp.Solution.ToString);
+  Memo1.Lines.Add('f(x0) = ' + tmp.Residual.ToString + sLineBreak);
+
+  for r in tmp.GuessesList do
+    Memo1.Lines.Add(r.ToString);
+end;``
+
+I have created a VCL project but as I have already said, you'll get the same result on FMX. This is what I get:
+
+<p align="center"><img src="https://github.com/albertodev01/TEquations/blob/master/Delphi/Component/NonVisual/github_images/result.png" /></p>
+ 
