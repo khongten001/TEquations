@@ -24,11 +24,11 @@ In this section I'll show you how to solve a simple equation such as `f(x) = x^5
  1. Set the `Kind` property to `etEquation` (it's the default option)
  2. Expand `(TEquationOptions)` and use one of the following settings (it depends if you want to use Newton or Secant)
  
-  <p align="center"><img src="https://github.com/albertodev01/TEquations/blob/master/Delphi/Component/NonVisual/github_images/pmanager.png" /></p>
+  <p align="center"><img src="https://github.com/albertodev01/TEquations/blob/master/Delphi/Component/NonVisual/github_images/methods.png" /></p>
   
   3. Double click the button and type the following code:
 
-``delphi
+```delphi
 procedure TForm1.Button1Click(Sender: TObject);
 var
   tmp: TSolution;
@@ -41,9 +41,37 @@ begin
 
   for r in tmp.GuessesList do
     Memo1.Lines.Add(r.ToString);
-end;``
+end;
+```
 
 I have created a VCL project but as I have already said, you'll get the same result on FMX. This is what I get:
 
 <p align="center"><img src="https://github.com/albertodev01/TEquations/blob/master/Delphi/Component/NonVisual/github_images/result.png" /></p>
  
+**Polynomial**
+In this section I'll show you how to solve a simple polynomial equation such as `f(x) = -x^4 - 2x^3 + 3x + 6`. You could have used the *Equation* mode I have explained above but for polynomials, this mode is more accurate and it calculates all the solutions. Select the component in the Form Designer and do the following:
+
+1. Set the `Kind` property to `etPolynomial` 
+ 2. Expand `(TPolynomialOptions)` and use one of the following settings
+ 
+  <p align="center"><img src="https://github.com/albertodev01/TEquations/blob/master/Delphi/Component/NonVisual/github_images/polysettings.png" /></p>
+  
+  3. Double click the button and type the following code:
+
+```delphi
+var
+  tmp: TSolutions;
+  i: Integer;
+begin
+  tmp := Solver.SolvePolynomial;
+  Memo1.Lines.Add('Discriminant = ' + tmp.Discriminant.ToString);
+  Memo1.Lines.Add(sLineBreak);
+
+  for i := Low(tmp.Solutions) to High(tmp.Solutions) do
+    Memo1.Lines.Add(tmp.Solutions[i].RealPart.ToString + ' + ' +
+                    tmp.Solutions[i].ImagPart.ToString + 'i')
+```
+
+Please note that the `a` property in the component is associated to the parameter with the lowest degree. In fact I have set `a` to 6 (x^0) and **not** `a` to -1 (x^4). I have created a FMX project but as I have already said, you'll get the same result on VCL. This is what I get:
+
+<p align="center"><img src="https://github.com/albertodev01/TEquations/blob/master/Delphi/Component/NonVisual/github_images/resultpoly.png" /></p>
