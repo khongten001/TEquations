@@ -15,13 +15,30 @@ type
      function FromDouble(const d: double): TFraction;
      function GetDecimal: double;
      function GetString: string;
+   public type
+           TMixedFraction = record
+             private
+               FWholePart: integer;
+               FNumerator, FDenominator: integer;
+               function GetString: string;
+               function GetDouble: double;
+             public
+               constructor Create(AWholePart, ANumerator, ADenominator: integer);
+               property WholePart: integer read FWholePart;
+               property Numerator: integer read FNumerator;
+               property Denominator: integer read FDenominator;
+               property ToString: string read GetString;
+               property ToDouble: double read GetDouble;
+           end;
    public
      constructor Create(aNumerator: integer; aDenominator: integer); overload;
      constructor Create(aFraction: string); overload;
      constructor Create(aFraction: double); overload;
+     constructor Create(aMixedFraction: TFraction.TMixedFraction); overload;
      procedure Reduce;
      procedure Negate;
      procedure Inverse;
+     function ToMixedFraction(out Mixed: TFraction.TMixedFraction): boolean;
      class operator Add(fraction1, fraction2: TFraction): TFraction;
      class operator Subtract(fraction1, fraction2: TFraction): TFraction;
      class operator Multiply(fraction1, fraction2: TFraction): TFraction;
@@ -74,6 +91,12 @@ begin
   Self.aDenominator := Temp.aDenominator;
 end;
 
+constructor TFraction.Create(AMixedFraction: TMixedFraction);
+begin
+  Self.aNumerator := aMixedFraction.FWholePart * aMixedFraction.FDenominator + aMixedFraction.FNumerator;
+  Self.aDenominator := aMixedFraction.FDenominator;
+end;
+
 function TFraction.GCD(a, b: integer): integer;
 var remd: integer;
 begin
@@ -88,6 +111,19 @@ end;
 function TFraction.GetDecimal: double;
 begin
   Result := aNumerator / aDenominator;
+end;
+
+function TFraction.ToMixedFraction(out Mixed: TFraction.TMixedFraction): boolean;
+begin
+  Result := false;
+
+  if aNumerator > aDenominator then
+    begin
+      Mixed.FWholePart := aNumerator div aDenominator;
+      Mixed.FNumerator := aNumerator mod aDenominator;
+      Mixed.FDenominator := aDenominator;
+      Result := true;
+    end;
 end;
 
 function TFraction.GetString: string;
@@ -224,6 +260,39 @@ end;
 class operator TFraction.Implicit(fraction: string): TFraction;
 begin
   Result := TFraction.Create(fraction);
+end;
+
+{ TFraction.TMixedFraction }
+
+constructor TFraction.TMixedFraction.Create(AWholePart, ANumerator,
+  ADenominator: integer);
+begin
+  if ANumerator > ADenominator then
+    raise Exception.Create('The numerator cannot be greater than the denominator');
+
+  if ADenominator = 0 then
+    raise Exception.Create('Denominator cannot be zero.');
+
+  FWholePart := AWholePart;
+  FNumerator := ANumerator;
+
+  if ADenominator > 0 then
+    FDenominator := ADenominator
+  else
+    begin
+      FNumerator := -FNumerator;
+      FDenominator := - FDenominator;
+    end;
+end;
+
+function TFraction.TMixedFraction.GetDouble: double;
+begin
+  Result := FWholePart + (FNumerator / FDenominator);
+end;
+
+function TFraction.TMixedFraction.GetString: string;
+begin
+  Result := FWholePart.ToString + ' ' + FNumerator.ToString + '/' + FDenominator.ToString;
 end;
 
 end.
