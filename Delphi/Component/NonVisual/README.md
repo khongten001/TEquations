@@ -18,7 +18,7 @@
 
 Let's do an example. Create a new VCL or FMX project, add a Button, add a Memo and drop the `EquationSolver` component (set its `Name` property to `Solver`, just to type less characters!).
 
-**Equation**
+**Equation.**
 In this section I'll show you how to solve a simple equation such as `f(x) = x^5-3x+1`. Select the component in the Form Designer and do the following:
 
  1. Set the `Kind` property to `etEquation` (it's the default option)
@@ -48,7 +48,7 @@ I have created a VCL project but as I have already said, you'll get the same res
 
 <p align="center"><img src="https://github.com/albertodev01/TEquations/blob/master/Delphi/Component/NonVisual/github_images/result.png" /></p>
  
-**Polynomial**
+**Polynomial.**
 In this section I'll show you how to solve a simple polynomial equation such as `f(x) = -x^4 - 2x^3 + 3x + 6`. You could have used the *Equation* mode I have explained above but for polynomials, this mode is more accurate and it calculates all the solutions. Select the component in the Form Designer and do the following:
 
 1. Set the `Kind` property to `etPolynomial` 
