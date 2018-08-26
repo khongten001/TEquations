@@ -55,6 +55,7 @@ type
   IPolyBase = interface
     ['{F04E0939-8122-4ACB-A296-3BBA1FC0B7DB}']
     function GetSolutions: TPolyResult;
+    function EvaluateOn(Point: double): double;
   end;
 
 implementation
