@@ -113,3 +113,7 @@ end;
 ```
 
 Done! Now if you run the program you'll get the following result:
+
+<p align="center"><img src="https://github.com/albertodev01/TEquations/blob/master/Delphi/Component/Visual/github_images/polyresult.png" /></p>
+
+Note that you could have used the `etEquation` mode with the `Equation` property set to `x^3+2*x^2+3*x+4`. The equation would have been the same but you wouldn't have been able to compute the imaginary solutions.
