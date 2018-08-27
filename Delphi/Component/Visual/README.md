@@ -16,37 +16,73 @@
 
 # Usage
 
-Let's do an example. Create a new FMX project, add a Button and drop the `EquationSolverPlot` component (set its `Name` property to `Solver`, just to type less characters!).
+Let's do an example. Create a new FMX project, add a Button and drop the `EquationSolverPlot` component (set its `Name` property to `Solver`, just to type less characters!). In this section I'll show you how to solve a simple equation such as `f(x) = x^2-4.2`. Select the component in the Form Designer and do the following:
 
-**Equation.**
-In this section I'll show you how to solve a simple equation such as `f(x) = x^5-3x+1`. Select the component in the Form Designer and do the following:
-
+ 1. Align it to `Client`
  1. Set the `Kind` property to `etEquation` (it's the default option)
  2. Expand `(TEquationOptions)` and use one of the following settings (it depends if you want to use Newton or Secant)
  
-  <p align="center"><img src="https://github.com/albertodev01/TEquations/blob/master/Delphi/Component/NonVisual/github_images/methods.png" /></p>
+  <p align="center"><img src="https://github.com/albertodev01/TEquations/blob/master/Delphi/Component/Visual/github_images/equation_settings.png" /></p>
   
-  3. Double click the button and type the following code:
-
+  3. Just as example, add `res: string;` in the private part of your form. Then add an `OnCreate` event for the `From` and type the following code:
+  
 ```delphi
-procedure TForm1.Button1Click(Sender: TObject);
+procedure TForm1.FormCreate(Sender: TObject);
 var
   tmp: TSolution;
-  r: double;
+  I: Integer;
 begin
-  tmp := Solver.SolveEquation;
+  if Solver.Kind = etEquation then
+    begin
+      tmp := Solver.SolveEquation;
 
-  Memo1.Lines.Add('x0 = ' + tmp.Solution.ToString);
-  Memo1.Lines.Add('f(x0) = ' + tmp.Residual.ToString + sLineBreak);
+      res := 'x0 = ' + tmp.Solution.ToString + slineBreak;
+      res := res + 'f(x0) = ' + tmp.Residual.ToString + sLineBreak + sLineBreak;
 
-  for r in tmp.GuessesList do
-    Memo1.Lines.Add(r.ToString);
+      for I := Low(tmp.GuessesList) to High(tmp.GuessesList) do
+        res := res + tmp.GuessesList[I].ToString + sLineBreak;
+    end
+  else
+    begin
+      //polynomial...
+    end;
 end;
 ```
 
-I have created a VCL project but as I have already said, you'll get the same result on FMX. This is what I get:
+  4. Put a `TButton` on the top-left corner of the form (or where you prefer!), set the Text property to 'Solve', double click it and type the following code:
 
-<p align="center"><img src="https://github.com/albertodev01/TEquations/blob/master/Delphi/Component/NonVisual/github_images/result.png" /></p>
+```delphi
+procedure TForm1.Button1Click(Sender: TObject);
+begin
+  ShowMessage(res);
+end;
+```
+
+  5. Let's add the possibility to zoom in and out with the mouse wheel! Select the component, click on Events and add a `OnMouseWheel` event.
+  
+```delphi
+procedure TForm1.SolverMouseWheel(Sender: TObject; Shift: TShiftState;
+  WheelDelta: Integer; var Handled: Boolean);
+begin
+  if WheelDelta > 0 then
+    Solver.ZoomIn
+  else
+    Solver.ZoomOut;
+end;
+```  
+
+Done! Save all, click `Run` and you'll get the following result:
+
+<p align="center"><img src="https://github.com/albertodev01/TEquations/blob/master/Delphi/Component/Visual/github_images/example1.png" /></p>
+
+Now if you try to move the wheel of your mouse up or down you'll be able to zoom in or out the equation!
+
+<p align="center"><img src="https://github.com/albertodev01/TEquations/blob/master/Delphi/Component/Visual/github_images/example2-zoom.png" /></p>
+
+Finally, if you click on the button you'll get the approximation of the root, the residual and the list of the approximation calculated by the root finding algorithm you have chosen (in my case, Newton).
+
+
+<p align="center"><img src="https://github.com/albertodev01/TEquations/blob/master/Delphi/Component/Visual/github_images/result.png" /></p>
  
 **Polynomial.**
 In this section I'll show you how to solve a simple polynomial equation such as `f(x) = -x^4 - 2x^3 + 3x + 6`. You could have used the *Equation* mode I have explained above but for polynomials, this mode is more accurate and it calculates all the solutions. Select the component in the Form Designer and do the following:
