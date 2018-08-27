@@ -40,16 +40,8 @@ begin
 end;
 
 function TPolynomial.EvaluateOn(x: double): double;
-var pow, i: integer;
 begin
-  pow := 0;
-  Result := 0;
-
-  for i := High(FPoly) downto Low(FPoly) do
-    begin
-      Result := Result + FPoly[i] * power(x, pow);
-      Inc(pow);
-    end;
+  Result := Poly(x, FPoly);
 end;
 
 function TPolynomial.GetCoeff(Index: integer): double;
@@ -70,7 +62,7 @@ begin
   else
    begin
      SetLength(x, Length(FPoly)-1);
-     for i := 0 to Length(x)-1 do
+     for i := Length(x)-1 downto 0 do
        x[i] := FPoly[i+1]*(i+1);
 
      Result := TPolynomial.Create(x);
