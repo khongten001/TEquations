@@ -39,7 +39,7 @@ namespace NA_Fraction {
 		explicit Fraction(const std::string& f);
 		explicit Fraction(double x);
 		explicit Fraction(const MixedFraction& m) : numerator(m.getWholePart() * m.getDenominator() + m.getNumerator()), 
-													denominator(m.getDenominator()) {};
+							    denominator(m.getDenominator()) {};
 
 		void Reduce();
 		void Negate();
