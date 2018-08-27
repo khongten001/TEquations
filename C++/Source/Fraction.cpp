@@ -4,6 +4,14 @@
 
 namespace NA_Fraction {
 
+	double MixedFraction::toDouble() const {
+		return whole + (num / den);
+	}
+
+	std::string MixedFraction::toString() const {
+		return std::to_string(whole) + " " + std::to_string(num) + "/" + std::to_string(den);
+	}
+
 	Fraction::Fraction(const std::string& f) {
 		//this regex ensures that the denominator will never be zero. Only integers and fractions are accepted
 		if (!std::regex_match(f, std::regex{ "(?:[1-9][0-9]*|0)(?:\/[1-9][0-9]*)?" }))
@@ -80,6 +88,14 @@ namespace NA_Fraction {
 		return toString();
 	}
 
+	std::optional<MixedFraction> Fraction::toMixedFraction() const {
+		if (numerator > denominator) {
+			return std::optional<MixedFraction>{ MixedFraction{numerator / denominator, numerator % denominator, denominator} };
+		} else {
+			return std::nullopt;
+		}
+	}
+
 	Fraction& Fraction::operator++() {
 		numerator += denominator;
 		return *this;
@@ -117,5 +133,4 @@ namespace NA_Fraction {
 	Fraction operator/(const Fraction& fraction1, const Fraction& fraction2) {
 		return Fraction(fraction1.getNumerator()*fraction2.getDenominator(), fraction1.getDenominator() * fraction2.getNumerator());
 	}
-
 }
