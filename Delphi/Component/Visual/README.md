@@ -81,33 +81,35 @@ Now if you try to move the wheel of your mouse up or down you'll be able to zoom
 
 Finally, if you click on the button you'll get the approximation of the root, the residual and the list of the approximation calculated by the root finding algorithm you have chosen (in my case, Newton).
 
-
 <p align="center"><img src="https://github.com/albertodev01/TEquations/blob/master/Delphi/Component/Visual/github_images/result.png" /></p>
  
 **Polynomial.**
-In this section I'll show you how to solve a simple polynomial equation such as `f(x) = -x^4 - 2x^3 + 3x + 6`. You could have used the *Equation* mode I have explained above but for polynomials, this mode is more accurate and it calculates all the solutions. Select the component in the Form Designer and do the following:
+From the example above, you just need to do some little changes and you'll be ready to solve polynomials as well:
 
-1. Set the `Kind` property to `etPolynomial` 
- 2. Expand `(TPolynomialOptions)` and use one of the following settings
- 
-  <p align="center"><img src="https://github.com/albertodev01/TEquations/blob/master/Delphi/Component/NonVisual/github_images/polysettings.png" /></p>
+  1. Select the component and change the `Kind` property to `etPolynomial`.
+  2. Expand `(TPolynomialOptions)` and use the following settings. Here I want to solve `f(x) = x^3 + 2x^2 + 3x + 4`.
   
-  3. Double click the button and type the following code:
+  <p align="center"><img src="https://github.com/albertodev01/TEquations/blob/master/Delphi/Component/Visual/github_images/polysettings.png" /></p>
+  
+  3. From the previous code, in the `OnCreate` event, use the following code:
 
 ```delphi
+procedure TForm1.FormCreate(Sender: TObject);
 var
   tmp: TSolutions;
-  i: Integer;
+  I: Integer;
 begin
-  tmp := Solver.SolvePolynomial;
-  Memo1.Lines.Add('Discriminant = ' + tmp.Discriminant.ToString);
-  Memo1.Lines.Add(sLineBreak);
+  if Solver.Kind = etPolynomial then
+    begin
+      tmp := Solver.SolvePolynomial;
+      res := 'Disc. = ' + tmp.Discriminant.ToString + sLineBreak + sLineBreak;
 
-  for i := Low(tmp.Solutions) to High(tmp.Solutions) do
-    Memo1.Lines.Add(tmp.Solutions[i].RealPart.ToString + ' + ' +
-                    tmp.Solutions[i].ImagPart.ToString + 'i')
+      for I := Low(tmp.Solutions) to High(tmp.Solutions) do
+        res := res + 'x' + i.ToString + ' = '+
+                      tmp.Solutions[I].RealPart.ToString + ' + ' +
+                      tmp.Solutions[I].ImagPart.ToString + 'i ' + sLineBreak;
+    end;
+end;
 ```
 
-Please note that the `a` property in the component is associated to the parameter with the lowest degree. In fact I have set `a` to 6 (x^0) and **not** `a` to -1 (x^4). I have created a FMX project but as I have already said, you'll get the same result on VCL. This is what I get:
-
-<p align="center"><img src="https://github.com/albertodev01/TEquations/blob/master/Delphi/Component/NonVisual/github_images/resultpoly.png" /></p>
+Done! Now if you run the program you'll get the following result:
